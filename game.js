@@ -1,6 +1,6 @@
 // ============================================================
 // SHADOW KNIGHT
-// STEP 2 - COMBAT SYSTEM
+// STEP 3 - ADVANCED ENEMY SYSTEM
 // ============================================================
 
 const canvas = document.getElementById("gameCanvas");
@@ -93,8 +93,6 @@ window.addEventListener("keydown", function(event) {
     keys[key] = true;
 
 
-    // Attack
-
     if (key === " ") {
 
         attack();
@@ -158,88 +156,123 @@ const obstacles = [
 
 
 // ============================================================
-// ENEMIES
+// ENEMY TYPES
 // ============================================================
 
-const enemies = [
+const enemyTypes = [
 
     {
-        x: 700,
-        y: 600,
 
-        width: 36,
-        height: 36,
+        name: "Goblin",
 
-        hp: 60,
-        maxHp: 60,
+        width: 32,
+        height: 32,
 
-        damage: 10,
+        hp: 50,
+        damage: 8,
 
-        speed: 1,
+        speed: 1.6,
 
-        alive: true,
+        xp: 30,
+        gold: 8,
 
-        color: "#9b3d3d"
+        color: "#4caf50"
+
     },
 
     {
-        x: 1200,
-        y: 500,
 
-        width: 36,
-        height: 36,
+        name: "Orc",
 
-        hp: 80,
-        maxHp: 80,
+        width: 42,
+        height: 42,
 
-        damage: 12,
-
-        speed: 1,
-
-        alive: true,
-
-        color: "#8f4545"
-    },
-
-    {
-        x: 1700,
-        y: 800,
-
-        width: 36,
-        height: 36,
-
-        hp: 100,
-        maxHp: 100,
-
+        hp: 120,
         damage: 15,
 
         speed: 0.8,
 
-        alive: true,
+        xp: 70,
+        gold: 20,
 
-        color: "#753939"
+        color: "#795548"
+
     },
 
     {
-        x: 2200,
-        y: 600,
 
-        width: 36,
-        height: 36,
+        name: "Demon",
 
-        hp: 120,
-        maxHp: 120,
+        width: 38,
+        height: 38,
 
-        damage: 18,
+        hp: 180,
+        damage: 22,
 
-        speed: 0.7,
+        speed: 1.1,
 
-        alive: true,
+        xp: 120,
+        gold: 35,
 
-        color: "#653333"
+        color: "#9c27b0"
+
     }
 
 ];
+
+
+// ============================================================
+// ENEMIES
+// ============================================================
+
+const enemies = [];
+
+const MAX_ENEMIES = 10;
+
+let enemyId = 0;
+
+
+// ============================================================
+// DAMAGE NUMBERS
+// ============================================================
+
+const damageNumbers = [];
+
+
+// ============================================================
+// DEATH EFFECTS
+// ============================================================
+
+const deathEffects = [];
+
+
+// ============================================================
+// UTILITY
+// ============================================================
+
+function random(min, max) {
+
+    return Math.random() *
+        (max - min) +
+        min;
+
+}
+
+
+function distanceBetween(a, b) {
+
+    const dx =
+        a.x - b.x;
+
+    const dy =
+        a.y - b.y;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+
+}
 
 
 // ============================================================
@@ -250,13 +283,17 @@ function isColliding(rect1, rect2) {
 
     return (
 
-        rect1.x < rect2.x + rect2.width &&
+        rect1.x <
+        rect2.x + rect2.width &&
 
-        rect1.x + rect1.width > rect2.x &&
+        rect1.x + rect1.width >
+        rect2.x &&
 
-        rect1.y < rect2.y + rect2.height &&
+        rect1.y <
+        rect2.y + rect2.height &&
 
-        rect1.y + rect1.height > rect2.y
+        rect1.y + rect1.height >
+        rect2.y
 
     );
 
@@ -278,7 +315,12 @@ function canMoveTo(newX, newY) {
 
     for (const obstacle of obstacles) {
 
-        if (isColliding(newPlayer, obstacle)) {
+        if (
+            isColliding(
+                newPlayer,
+                obstacle
+            )
+        ) {
 
             return false;
 
@@ -302,7 +344,10 @@ function updatePlayer() {
     let dy = 0;
 
 
-    if (keys["w"] || keys["arrowup"]) {
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
 
         dy -= player.speed;
 
@@ -311,7 +356,10 @@ function updatePlayer() {
     }
 
 
-    if (keys["s"] || keys["arrowdown"]) {
+    if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
 
         dy += player.speed;
 
@@ -320,7 +368,10 @@ function updatePlayer() {
     }
 
 
-    if (keys["a"] || keys["arrowleft"]) {
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
 
         dx -= player.speed;
 
@@ -329,7 +380,10 @@ function updatePlayer() {
     }
 
 
-    if (keys["d"] || keys["arrowright"]) {
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
 
         dx += player.speed;
 
@@ -338,9 +392,10 @@ function updatePlayer() {
     }
 
 
-    // Normalize diagonal movement
-
-    if (dx !== 0 && dy !== 0) {
+    if (
+        dx !== 0 &&
+        dy !== 0
+    ) {
 
         dx *= 0.7071;
         dy *= 0.7071;
@@ -348,21 +403,29 @@ function updatePlayer() {
     }
 
 
-    if (canMoveTo(player.x + dx, player.y)) {
+    if (
+        canMoveTo(
+            player.x + dx,
+            player.y
+        )
+    ) {
 
         player.x += dx;
 
     }
 
 
-    if (canMoveTo(player.x, player.y + dy)) {
+    if (
+        canMoveTo(
+            player.x,
+            player.y + dy
+        )
+    ) {
 
         player.y += dy;
 
     }
 
-
-    // World boundaries
 
     player.x = Math.max(
         0,
@@ -385,12 +448,127 @@ function updatePlayer() {
 
 
 // ============================================================
+// SPAWN ENEMY
+// ============================================================
+
+function spawnEnemy() {
+
+    if (
+        enemies.length >=
+        MAX_ENEMIES
+    ) {
+
+        return;
+
+    }
+
+
+    const type =
+        enemyTypes[
+            Math.floor(
+                Math.random() *
+                enemyTypes.length
+            )
+        ];
+
+
+    let x;
+    let y;
+
+    let attempts = 0;
+
+
+    do {
+
+        x = random(
+            100,
+            WORLD_WIDTH - 100
+        );
+
+        y = random(
+            100,
+            WORLD_HEIGHT - 100
+        );
+
+        attempts++;
+
+    }
+
+    while (
+        distanceBetween(
+            {
+                x: x,
+                y: y
+            },
+            player
+        ) < 500 &&
+        attempts < 100
+    );
+
+
+    const enemy = {
+
+        id: enemyId++,
+
+        type: type.name,
+
+        x: x,
+        y: y,
+
+        width: type.width,
+        height: type.height,
+
+        hp: type.hp,
+        maxHp: type.hp,
+
+        damage: type.damage,
+
+        speed: type.speed,
+
+        xp: type.xp,
+        gold: type.gold,
+
+        color: type.color,
+
+        alive: true,
+
+        lastAttack: 0,
+
+        attackCooldown: 900,
+
+        hitFlash: 0
+
+    };
+
+
+    enemies.push(enemy);
+
+}
+
+
+// ============================================================
+// INITIAL SPAWN
+// ============================================================
+
+for (
+    let i = 0;
+    i < MAX_ENEMIES;
+    i++
+) {
+
+    spawnEnemy();
+
+}
+
+
+// ============================================================
 // ATTACK BOX
 // ============================================================
 
 function getAttackBox() {
 
-    const size = 55;
+    const size = 60;
+
 
     let box = {
 
@@ -403,46 +581,81 @@ function getAttackBox() {
     };
 
 
-    if (player.direction === "up") {
+    if (
+        player.direction ===
+        "up"
+    ) {
 
-        box.x = player.x - 10;
-        box.y = player.y - size;
+        box.x =
+            player.x - 14;
 
-        box.width = player.width + 20;
-        box.height = size;
+        box.y =
+            player.y - size;
 
-    }
+        box.width =
+            player.width + 28;
 
-
-    else if (player.direction === "down") {
-
-        box.x = player.x - 10;
-        box.y = player.y + player.height;
-
-        box.width = player.width + 20;
-        box.height = size;
+        box.height =
+            size;
 
     }
 
 
-    else if (player.direction === "left") {
+    else if (
+        player.direction ===
+        "down"
+    ) {
 
-        box.x = player.x - size;
-        box.y = player.y - 10;
+        box.x =
+            player.x - 14;
 
-        box.width = size;
-        box.height = player.height + 20;
+        box.y =
+            player.y +
+            player.height;
+
+        box.width =
+            player.width + 28;
+
+        box.height =
+            size;
 
     }
 
 
-    else if (player.direction === "right") {
+    else if (
+        player.direction ===
+        "left"
+    ) {
 
-        box.x = player.x + player.width;
-        box.y = player.y - 10;
+        box.x =
+            player.x - size;
 
-        box.width = size;
-        box.height = player.height + 20;
+        box.y =
+            player.y - 14;
+
+        box.width =
+            size;
+
+        box.height =
+            player.height + 28;
+
+    }
+
+
+    else {
+
+        box.x =
+            player.x +
+            player.width;
+
+        box.y =
+            player.y - 14;
+
+        box.width =
+            size;
+
+        box.height =
+            player.height + 28;
 
     }
 
@@ -462,7 +675,8 @@ function attack() {
 
 
     if (
-        now - player.lastAttack <
+        now -
+        player.lastAttack <
         player.attackCooldown
     ) {
 
@@ -474,28 +688,43 @@ function attack() {
     player.lastAttack = now;
 
 
-    const attackBox = getAttackBox();
+    const attackBox =
+        getAttackBox();
 
 
     for (const enemy of enemies) {
 
         if (!enemy.alive) {
+
             continue;
+
         }
 
 
-        if (isColliding(attackBox, enemy)) {
+        if (
+            isColliding(
+                attackBox,
+                enemy
+            )
+        ) {
 
-            enemy.hp -= player.damage;
+            enemy.hp -=
+                player.damage;
 
 
-            console.log(
-                "Enemy hit! HP:",
-                enemy.hp
+            enemy.hitFlash = 120;
+
+
+            createDamageNumber(
+                enemy.x,
+                enemy.y,
+                player.damage
             );
 
 
-            if (enemy.hp <= 0) {
+            if (
+                enemy.hp <= 0
+            ) {
 
                 killEnemy(enemy);
 
@@ -516,21 +745,48 @@ function killEnemy(enemy) {
 
     enemy.alive = false;
 
-    const xpReward = 50;
-    const goldReward = 10;
+
+    player.xp +=
+        enemy.xp;
+
+    player.gold +=
+        enemy.gold;
 
 
-    player.xp += xpReward;
-
-    player.gold += goldReward;
-
-
-    console.log(
-        `Enemy defeated! +${xpReward} XP +${goldReward} Gold`
+    createDeathEffect(
+        enemy.x,
+        enemy.y,
+        enemy.color
     );
 
 
     checkLevelUp();
+
+
+    // Respawn
+
+    setTimeout(
+        function() {
+
+            const index =
+                enemies.indexOf(enemy);
+
+
+            if (index !== -1) {
+
+                enemies.splice(
+                    index,
+                    1
+                );
+
+            }
+
+
+            spawnEnemy();
+
+        },
+        3000
+    );
 
 }
 
@@ -541,9 +797,14 @@ function killEnemy(enemy) {
 
 function checkLevelUp() {
 
-    while (player.xp >= player.maxXp) {
+    while (
+        player.xp >=
+        player.maxXp
+    ) {
 
-        player.xp -= player.maxXp;
+        player.xp -=
+            player.maxXp;
+
 
         player.level++;
 
@@ -556,7 +817,9 @@ function checkLevelUp() {
 
         player.maxHp += 20;
 
-        player.hp = player.maxHp;
+        player.hp =
+            player.maxHp;
+
 
         player.damage += 5;
 
@@ -576,10 +839,26 @@ function checkLevelUp() {
 
 function updateEnemies() {
 
-    for (const enemy of enemies) {
+    for (
+        const enemy of enemies
+    ) {
 
-        if (!enemy.alive) {
+        if (
+            !enemy.alive
+        ) {
+
             continue;
+
+        }
+
+
+        if (
+            enemy.hitFlash > 0
+        ) {
+
+            enemy.hitFlash -=
+                16;
+
         }
 
 
@@ -597,33 +876,114 @@ function updateEnemies() {
             );
 
 
-        // Enemy follows player
+        // Follow player
 
         if (
-            distance > 45 &&
-            distance < 500
+            distance > 50 &&
+            distance < 600
         ) {
 
             const moveX =
-                (dx / distance) *
+                dx /
+                distance *
                 enemy.speed;
+
 
             const moveY =
-                (dy / distance) *
+                dy /
+                distance *
                 enemy.speed;
 
 
-            enemy.x += moveX;
-            enemy.y += moveY;
+            const newX =
+                enemy.x +
+                moveX;
+
+
+            const newY =
+                enemy.y +
+                moveY;
+
+
+            // Avoid obstacles
+
+            const enemyRect = {
+
+                x: newX,
+
+                y: newY,
+
+                width:
+                    enemy.width,
+
+                height:
+                    enemy.height
+
+            };
+
+
+            let blocked = false;
+
+
+            for (
+                const obstacle
+                of obstacles
+            ) {
+
+                if (
+                    isColliding(
+                        enemyRect,
+                        obstacle
+                    )
+                ) {
+
+                    blocked = true;
+
+                    break;
+
+                }
+
+            }
+
+
+            if (!blocked) {
+
+                enemy.x =
+                    newX;
+
+                enemy.y =
+                    newY;
+
+            }
 
         }
 
 
-        // Enemy attacks player
+        // Attack player
 
-        if (distance < 50) {
+        if (
+            distance < 55
+        ) {
 
-            damagePlayer(enemy.damage);
+            const now =
+                Date.now();
+
+
+            if (
+                now -
+                enemy.lastAttack >
+                enemy.attackCooldown
+            ) {
+
+                enemy.lastAttack =
+                    now;
+
+
+                damagePlayer(
+                    enemy.damage
+                );
+
+            }
 
         }
 
@@ -641,14 +1001,14 @@ let lastPlayerDamage = 0;
 
 function damagePlayer(amount) {
 
-    const now = Date.now();
+    const now =
+        Date.now();
 
-
-    // Prevent damage every frame
 
     if (
-        now - lastPlayerDamage <
-        700
+        now -
+        lastPlayerDamage <
+        500
     ) {
 
         return;
@@ -656,25 +1016,34 @@ function damagePlayer(amount) {
     }
 
 
-    lastPlayerDamage = now;
+    lastPlayerDamage =
+        now;
 
 
-    player.hp -= amount;
+    player.hp -=
+        amount;
 
 
-    if (player.hp < 0) {
+    if (
+        player.hp < 0
+    ) {
 
         player.hp = 0;
 
     }
 
 
-    console.log(
-        `Player damaged: -${amount} HP`
+    createDamageNumber(
+        player.x,
+        player.y,
+        amount,
+        true
     );
 
 
-    if (player.hp <= 0) {
+    if (
+        player.hp <= 0
+    ) {
 
         playerDeath();
 
@@ -690,11 +1059,258 @@ function damagePlayer(amount) {
 function playerDeath() {
 
     alert(
-        "💀 Bạn đã chết!\n\nGame sẽ được tải lại."
+        "💀 Shadow Knight đã chết!"
     );
 
 
     location.reload();
+
+}
+
+
+// ============================================================
+// DAMAGE NUMBER
+// ============================================================
+
+function createDamageNumber(
+    x,
+    y,
+    damage,
+    isPlayer = false
+) {
+
+    damageNumbers.push({
+
+        x: x,
+
+        y: y,
+
+        damage: damage,
+
+        life: 1000,
+
+        isPlayer: isPlayer
+
+    });
+
+}
+
+
+// ============================================================
+// UPDATE DAMAGE NUMBERS
+// ============================================================
+
+function updateDamageNumbers() {
+
+    for (
+        let i =
+            damageNumbers.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const number =
+            damageNumbers[i];
+
+
+        number.y -= 0.5;
+
+        number.life -= 16;
+
+
+        if (
+            number.life <= 0
+        ) {
+
+            damageNumbers.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// DRAW DAMAGE NUMBERS
+// ============================================================
+
+function drawDamageNumbers() {
+
+    ctx.font =
+        "bold 18px Arial";
+
+    ctx.textAlign =
+        "center";
+
+
+    for (
+        const number
+        of damageNumbers
+    ) {
+
+        const alpha =
+            number.life /
+            1000;
+
+
+        ctx.globalAlpha =
+            alpha;
+
+
+        ctx.fillStyle =
+            number.isPlayer
+                ? "#ff5555"
+                : "#ffff00";
+
+
+        ctx.fillText(
+
+            "-" +
+            number.damage,
+
+            number.x -
+            camera.x,
+
+            number.y -
+            camera.y
+
+        );
+
+    }
+
+
+    ctx.globalAlpha = 1;
+
+}
+
+
+// ============================================================
+// DEATH EFFECT
+// ============================================================
+
+function createDeathEffect(
+    x,
+    y,
+    color
+) {
+
+    deathEffects.push({
+
+        x: x,
+
+        y: y,
+
+        radius: 10,
+
+        maxRadius: 50,
+
+        life: 500,
+
+        color: color
+
+    });
+
+}
+
+
+// ============================================================
+// UPDATE DEATH EFFECTS
+// ============================================================
+
+function updateDeathEffects() {
+
+    for (
+        let i =
+            deathEffects.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const effect =
+            deathEffects[i];
+
+
+        effect.radius +=
+            2;
+
+
+        effect.life -=
+            16;
+
+
+        if (
+            effect.life <= 0
+        ) {
+
+            deathEffects.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// DRAW DEATH EFFECTS
+// ============================================================
+
+function drawDeathEffects() {
+
+    for (
+        const effect
+        of deathEffects
+    ) {
+
+        const alpha =
+            effect.life /
+            500;
+
+
+        ctx.globalAlpha =
+            alpha;
+
+
+        ctx.strokeStyle =
+            effect.color;
+
+
+        ctx.lineWidth = 5;
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            effect.x -
+                camera.x,
+
+            effect.y -
+                camera.y,
+
+            effect.radius,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.stroke();
+
+    }
+
+
+    ctx.globalAlpha = 1;
 
 }
 
@@ -717,22 +1333,26 @@ function updateCamera() {
         canvas.height / 2;
 
 
-    camera.x = Math.max(
-        0,
-        Math.min(
-            WORLD_WIDTH - canvas.width,
-            camera.x
-        )
-    );
+    camera.x =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_WIDTH -
+                    canvas.width,
+                camera.x
+            )
+        );
 
 
-    camera.y = Math.max(
-        0,
-        Math.min(
-            WORLD_HEIGHT - canvas.height,
-            camera.y
-        )
-    );
+    camera.y =
+        Math.max(
+            0,
+            Math.min(
+                WORLD_HEIGHT -
+                    canvas.height,
+                camera.y
+            )
+        );
 
 }
 
@@ -743,7 +1363,9 @@ function updateCamera() {
 
 function drawWorld() {
 
-    ctx.fillStyle = "#477a3a";
+    ctx.fillStyle =
+        "#477a3a";
+
 
     ctx.fillRect(
         0,
@@ -758,32 +1380,45 @@ function drawWorld() {
 
 
     const startX =
-        Math.floor(camera.x / TILE_SIZE) *
+        Math.floor(
+            camera.x /
+            TILE_SIZE
+        ) *
         TILE_SIZE;
 
 
     const startY =
-        Math.floor(camera.y / TILE_SIZE) *
+        Math.floor(
+            camera.y /
+            TILE_SIZE
+        ) *
         TILE_SIZE;
 
 
     for (
         let x = startX;
-        x < camera.x + canvas.width;
+        x <
+            camera.x +
+            canvas.width;
         x += TILE_SIZE
     ) {
 
         ctx.beginPath();
 
+
         ctx.moveTo(
-            x - camera.x,
+            x -
+                camera.x,
             0
         );
 
+
         ctx.lineTo(
-            x - camera.x,
+            x -
+                camera.x,
             canvas.height
         );
+
 
         ctx.stroke();
 
@@ -792,21 +1427,28 @@ function drawWorld() {
 
     for (
         let y = startY;
-        y < camera.y + canvas.height;
+        y <
+            camera.y +
+            canvas.height;
         y += TILE_SIZE
     ) {
 
         ctx.beginPath();
 
+
         ctx.moveTo(
             0,
-            y - camera.y
+            y -
+                camera.y
         );
+
 
         ctx.lineTo(
             canvas.width,
-            y - camera.y
+            y -
+                camera.y
         );
+
 
         ctx.stroke();
 
@@ -821,36 +1463,55 @@ function drawWorld() {
 
 function drawObstacles() {
 
-    for (const obstacle of obstacles) {
+    for (
+        const obstacle
+        of obstacles
+    ) {
 
         const screenX =
-            obstacle.x - camera.x;
+            obstacle.x -
+            camera.x;
+
 
         const screenY =
-            obstacle.y - camera.y;
+            obstacle.y -
+            camera.y;
 
 
-        ctx.fillStyle = "#31552b";
+        ctx.fillStyle =
+            "#31552b";
 
 
         ctx.fillRect(
+
             screenX,
+
             screenY,
+
             obstacle.width,
+
             obstacle.height
+
         );
 
 
-        ctx.strokeStyle = "#1b3218";
+        ctx.strokeStyle =
+            "#1b3218";
+
 
         ctx.lineWidth = 4;
 
 
         ctx.strokeRect(
+
             screenX,
+
             screenY,
+
             obstacle.width,
+
             obstacle.height
+
         );
 
     }
@@ -864,82 +1525,167 @@ function drawObstacles() {
 
 function drawEnemies() {
 
-    for (const enemy of enemies) {
+    for (
+        const enemy
+        of enemies
+    ) {
 
-        if (!enemy.alive) {
+        if (
+            !enemy.alive
+        ) {
+
             continue;
+
         }
 
 
         const screenX =
-            enemy.x - camera.x;
+            enemy.x -
+            camera.x;
+
 
         const screenY =
-            enemy.y - camera.y;
+            enemy.y -
+            camera.y;
 
 
-        // Enemy body
+        // Flash when hit
 
-        ctx.fillStyle = enemy.color;
+        if (
+            enemy.hitFlash > 0
+        ) {
 
+            ctx.fillStyle =
+                "#ffffff";
+
+        }
+
+        else {
+
+            ctx.fillStyle =
+                enemy.color;
+
+        }
+
+
+        // Body
 
         ctx.fillRect(
+
             screenX,
+
             screenY,
+
             enemy.width,
+
             enemy.height
+
         );
 
 
         // Eyes
 
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle =
+            "#ffffff";
 
 
         ctx.fillRect(
+
             screenX + 7,
+
             screenY + 8,
+
             6,
+
             6
+
         );
 
 
         ctx.fillRect(
-            screenX + 23,
+
+            screenX +
+                enemy.width -
+                13,
+
             screenY + 8,
+
             6,
+
             6
+
         );
 
 
-        // HP bar background
+        // HP background
 
-        ctx.fillStyle = "#222";
+        ctx.fillStyle =
+            "#222";
 
 
         ctx.fillRect(
+
             screenX,
+
             screenY - 10,
+
             enemy.width,
+
             5
+
         );
 
 
         // HP
 
-        ctx.fillStyle = "#e53935";
+        ctx.fillStyle =
+            "#e53935";
 
 
         const hpWidth =
             enemy.width *
-            (enemy.hp / enemy.maxHp);
+            (
+                enemy.hp /
+                enemy.maxHp
+            );
 
 
         ctx.fillRect(
+
             screenX,
+
             screenY - 10,
+
             hpWidth,
+
             5
+
+        );
+
+
+        // Name
+
+        ctx.font =
+            "11px Arial";
+
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.fillStyle =
+            "#ffffff";
+
+
+        ctx.fillText(
+
+            enemy.type,
+
+            screenX +
+                enemy.width / 2,
+
+            screenY - 15
+
         );
 
     }
@@ -954,86 +1700,128 @@ function drawEnemies() {
 function drawPlayer() {
 
     const screenX =
-        player.x - camera.x;
+        player.x -
+        camera.x;
+
 
     const screenY =
-        player.y - camera.y;
+        player.y -
+        camera.y;
 
 
     // Body
 
-    ctx.fillStyle = "#4b6cff";
+    ctx.fillStyle =
+        "#4b6cff";
 
 
     ctx.fillRect(
+
         screenX,
+
         screenY,
+
         player.width,
+
         player.height
+
     );
 
 
     // Helmet
 
-    ctx.fillStyle = "#bfc7d5";
+    ctx.fillStyle =
+        "#bfc7d5";
 
 
     ctx.fillRect(
+
         screenX + 6,
+
         screenY - 8,
+
         20,
+
         10
+
     );
 
 
     // Sword
 
-    ctx.fillStyle = "#eeeeee";
+    ctx.fillStyle =
+        "#eeeeee";
 
 
-    if (player.direction === "right") {
+    if (
+        player.direction ===
+        "right"
+    ) {
 
         ctx.fillRect(
+
             screenX + 32,
+
             screenY + 8,
+
             20,
+
             5
+
         );
 
     }
 
-
-    else if (player.direction === "left") {
+    else if (
+        player.direction ===
+        "left"
+    ) {
 
         ctx.fillRect(
+
             screenX - 20,
+
             screenY + 8,
+
             20,
+
             5
+
         );
 
     }
 
-
-    else if (player.direction === "up") {
+    else if (
+        player.direction ===
+        "up"
+    ) {
 
         ctx.fillRect(
+
             screenX + 13,
+
             screenY - 25,
+
             5,
+
             20
+
         );
 
     }
-
 
     else {
 
         ctx.fillRect(
+
             screenX + 13,
+
             screenY + 32,
+
             5,
+
             20
+
         );
 
     }
@@ -1041,16 +1829,23 @@ function drawPlayer() {
 
     // Outline
 
-    ctx.strokeStyle = "#111";
+    ctx.strokeStyle =
+        "#111";
+
 
     ctx.lineWidth = 2;
 
 
     ctx.strokeRect(
+
         screenX,
+
         screenY,
+
         player.width,
+
         player.height
+
     );
 
 }
@@ -1062,11 +1857,13 @@ function drawPlayer() {
 
 function drawAttackEffect() {
 
-    const now = Date.now();
+    const now =
+        Date.now();
 
 
     if (
-        now - player.lastAttack >
+        now -
+            player.lastAttack >
         150
     ) {
 
@@ -1075,7 +1872,7 @@ function drawAttackEffect() {
     }
 
 
-    const attackBox =
+    const box =
         getAttackBox();
 
 
@@ -1084,10 +1881,17 @@ function drawAttackEffect() {
 
 
     ctx.fillRect(
-        attackBox.x - camera.x,
-        attackBox.y - camera.y,
-        attackBox.width,
-        attackBox.height
+
+        box.x -
+            camera.x,
+
+        box.y -
+            camera.y,
+
+        box.width,
+
+        box.height
+
     );
 
 }
@@ -1100,7 +1904,11 @@ function drawAttackEffect() {
 function updateHUD() {
 
     const hpPercent =
-        (player.hp / player.maxHp) * 100;
+        (
+            player.hp /
+            player.maxHp
+        ) *
+        100;
 
 
     document.getElementById(
@@ -1145,6 +1953,10 @@ function update() {
 
     updateEnemies();
 
+    updateDamageNumbers();
+
+    updateDeathEffects();
+
     updateCamera();
 
     updateHUD();
@@ -1159,10 +1971,13 @@ function update() {
 function draw() {
 
     ctx.clearRect(
+
         0,
         0,
+
         canvas.width,
         canvas.height
+
     );
 
 
@@ -1172,9 +1987,13 @@ function draw() {
 
     drawEnemies();
 
+    drawDeathEffects();
+
     drawPlayer();
 
     drawAttackEffect();
+
+    drawDamageNumbers();
 
 }
 
@@ -1189,7 +2008,9 @@ function gameLoop() {
 
     draw();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
