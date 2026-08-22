@@ -1,6 +1,6 @@
 // ============================================================
 // SHADOW KNIGHT
-// STEP 3 - ADVANCED ENEMY SYSTEM
+// STEP 4 - BOSS SYSTEM
 // ============================================================
 
 const canvas = document.getElementById("gameCanvas");
@@ -92,7 +92,6 @@ window.addEventListener("keydown", function(event) {
 
     keys[key] = true;
 
-
     if (key === " ") {
 
         attack();
@@ -102,7 +101,6 @@ window.addEventListener("keydown", function(event) {
     }
 
 });
-
 
 window.addEventListener("keyup", function(event) {
 
@@ -227,7 +225,7 @@ const enemyTypes = [
 
 const enemies = [];
 
-const MAX_ENEMIES = 10;
+const MAX_ENEMIES = 8;
 
 let enemyId = 0;
 
@@ -244,6 +242,63 @@ const damageNumbers = [];
 // ============================================================
 
 const deathEffects = [];
+
+
+// ============================================================
+// PROJECTILES
+// ============================================================
+
+const projectiles = [];
+
+
+// ============================================================
+// BOSS
+// ============================================================
+
+const boss = {
+
+    active: true,
+
+    name: "Shadow Lord",
+
+    x: 2300,
+
+    y: 1500,
+
+    width: 100,
+
+    height: 100,
+
+    hp: 1000,
+
+    maxHp: 1000,
+
+    damage: 30,
+
+    speed: 0.65,
+
+    phase: 1,
+
+    alive: true,
+
+    lastAttack: 0,
+
+    attackCooldown: 1500,
+
+    lastSkill: 0,
+
+    skillCooldown: 4000,
+
+    hitFlash: 0
+
+};
+
+
+// ============================================================
+// BOSS PROJECTILES
+// ============================================================
+
+const bossProjectiles = [];
 
 
 // ============================================================
@@ -305,9 +360,11 @@ function canMoveTo(newX, newY) {
     const newPlayer = {
 
         x: newX,
+
         y: newY,
 
         width: player.width,
+
         height: player.height
 
     };
@@ -506,19 +563,22 @@ function spawnEnemy() {
     );
 
 
-    const enemy = {
+    enemies.push({
 
         id: enemyId++,
 
         type: type.name,
 
         x: x,
+
         y: y,
 
         width: type.width,
+
         height: type.height,
 
         hp: type.hp,
+
         maxHp: type.hp,
 
         damage: type.damage,
@@ -526,6 +586,7 @@ function spawnEnemy() {
         speed: type.speed,
 
         xp: type.xp,
+
         gold: type.gold,
 
         color: type.color,
@@ -538,16 +599,13 @@ function spawnEnemy() {
 
         hitFlash: 0
 
-    };
-
-
-    enemies.push(enemy);
+    });
 
 }
 
 
 // ============================================================
-// INITIAL SPAWN
+// INITIAL ENEMIES
 // ============================================================
 
 for (
@@ -573,9 +631,11 @@ function getAttackBox() {
     let box = {
 
         x: player.x,
+
         y: player.y,
 
         width: player.width,
+
         height: player.height
 
     };
@@ -666,7 +726,7 @@ function getAttackBox() {
 
 
 // ============================================================
-// ATTACK
+// PLAYER ATTACK
 // ============================================================
 
 function attack() {
@@ -692,9 +752,15 @@ function attack() {
         getAttackBox();
 
 
-    for (const enemy of enemies) {
+    // Normal enemies
 
-        if (!enemy.alive) {
+    for (
+        const enemy of enemies
+    ) {
+
+        if (
+            !enemy.alive
+        ) {
 
             continue;
 
@@ -711,8 +777,8 @@ function attack() {
             enemy.hp -=
                 player.damage;
 
-
-            enemy.hitFlash = 120;
+            enemy.hitFlash =
+                120;
 
 
             createDamageNumber(
@@ -729,6 +795,29 @@ function attack() {
                 killEnemy(enemy);
 
             }
+
+        }
+
+    }
+
+
+    // Boss
+
+    if (
+        boss.active &&
+        boss.alive
+    ) {
+
+        if (
+            isColliding(
+                attackBox,
+                boss
+            )
+        ) {
+
+            damageBoss(
+                player.damage
+            );
 
         }
 
@@ -763,16 +852,18 @@ function killEnemy(enemy) {
     checkLevelUp();
 
 
-    // Respawn
-
     setTimeout(
         function() {
 
             const index =
-                enemies.indexOf(enemy);
+                enemies.indexOf(
+                    enemy
+                );
 
 
-            if (index !== -1) {
+            if (
+                index !== -1
+            ) {
 
                 enemies.splice(
                     index,
@@ -815,20 +906,191 @@ function checkLevelUp() {
             );
 
 
-        player.maxHp += 20;
+        player.maxHp +=
+            20;
+
 
         player.hp =
             player.maxHp;
 
 
-        player.damage += 5;
+        player.damage +=
+            5;
 
 
         console.log(
-            `LEVEL UP! Level ${player.level}`
+            "LEVEL UP!",
+            player.level
         );
 
     }
+
+}
+
+
+// ============================================================
+// BOSS DAMAGE
+// ============================================================
+
+function damageBoss(amount) {
+
+    if (
+        !boss.alive
+    ) {
+
+        return;
+
+    }
+
+
+    boss.hp -=
+        amount;
+
+
+    boss.hitFlash =
+        150;
+
+
+    createDamageNumber(
+        boss.x +
+            boss.width / 2,
+
+        boss.y,
+
+        amount
+    );
+
+
+    // Phase 2
+
+    if (
+        boss.hp <=
+            boss.maxHp * 0.5 &&
+        boss.phase === 1
+    ) {
+
+        boss.phase = 2;
+
+        boss.speed =
+            1.1;
+
+        boss.damage =
+            45;
+
+        boss.attackCooldown =
+            1000;
+
+        console.log(
+            "BOSS PHASE 2!"
+        );
+
+    }
+
+
+    // Boss death
+
+    if (
+        boss.hp <= 0
+    ) {
+
+        boss.hp = 0;
+
+        bossDeath();
+
+    }
+
+}
+
+
+// ============================================================
+// BOSS DEATH
+// ============================================================
+
+function bossDeath() {
+
+    boss.alive = false;
+
+    boss.active = false;
+
+
+    player.xp += 500;
+
+    player.gold += 500;
+
+
+    player.hp =
+        player.maxHp;
+
+
+    createDeathEffect(
+        boss.x +
+            boss.width / 2,
+
+        boss.y +
+            boss.height / 2,
+
+        "#8e44ad"
+    );
+
+
+    alert(
+        "👑 SHADOW LORD ĐÃ BỊ ĐÁNH BẠI!\n\n" +
+        "⭐ +500 XP\n" +
+        "💰 +500 Gold"
+    );
+
+
+    // Respawn after 15 seconds
+
+    setTimeout(
+        function() {
+
+            respawnBoss();
+
+        },
+        15000
+    );
+
+}
+
+
+// ============================================================
+// RESPAWN BOSS
+// ============================================================
+
+function respawnBoss() {
+
+    boss.hp =
+        boss.maxHp;
+
+    boss.phase = 1;
+
+    boss.damage = 30;
+
+    boss.speed = 0.65;
+
+    boss.attackCooldown =
+        1500;
+
+    boss.alive = true;
+
+    boss.active = true;
+
+    boss.x =
+        random(
+            1800,
+            2700
+        );
+
+    boss.y =
+        random(
+            1200,
+            1800
+        );
+
+    console.log(
+        "SHADOW LORD HAS RESPAWNED!"
+    );
 
 }
 
@@ -840,7 +1102,8 @@ function checkLevelUp() {
 function updateEnemies() {
 
     for (
-        const enemy of enemies
+        const enemy
+        of enemies
     ) {
 
         if (
@@ -863,10 +1126,13 @@ function updateEnemies() {
 
 
         const dx =
-            player.x - enemy.x;
+            player.x -
+            enemy.x;
+
 
         const dy =
-            player.y - enemy.y;
+            player.y -
+            enemy.y;
 
 
         const distance =
@@ -875,8 +1141,6 @@ function updateEnemies() {
                 dy * dy
             );
 
-
-        // Follow player
 
         if (
             distance > 50 &&
@@ -895,71 +1159,14 @@ function updateEnemies() {
                 enemy.speed;
 
 
-            const newX =
-                enemy.x +
+            enemy.x +=
                 moveX;
 
-
-            const newY =
-                enemy.y +
+            enemy.y +=
                 moveY;
-
-
-            // Avoid obstacles
-
-            const enemyRect = {
-
-                x: newX,
-
-                y: newY,
-
-                width:
-                    enemy.width,
-
-                height:
-                    enemy.height
-
-            };
-
-
-            let blocked = false;
-
-
-            for (
-                const obstacle
-                of obstacles
-            ) {
-
-                if (
-                    isColliding(
-                        enemyRect,
-                        obstacle
-                    )
-                ) {
-
-                    blocked = true;
-
-                    break;
-
-                }
-
-            }
-
-
-            if (!blocked) {
-
-                enemy.x =
-                    newX;
-
-                enemy.y =
-                    newY;
-
-            }
 
         }
 
-
-        // Attack player
 
         if (
             distance < 55
@@ -993,6 +1200,404 @@ function updateEnemies() {
 
 
 // ============================================================
+// BOSS AI
+// ============================================================
+
+function updateBoss() {
+
+    if (
+        !boss.active ||
+        !boss.alive
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        boss.hitFlash > 0
+    ) {
+
+        boss.hitFlash -=
+            16;
+
+    }
+
+
+    const dx =
+        player.x -
+        boss.x;
+
+
+    const dy =
+        player.y -
+        boss.y;
+
+
+    const distance =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
+
+
+    // Follow player
+
+    if (
+        distance > 120 &&
+        distance < 1000
+    ) {
+
+        const moveX =
+            dx /
+            distance *
+            boss.speed;
+
+
+        const moveY =
+            dy /
+            distance *
+            boss.speed;
+
+
+        boss.x +=
+            moveX;
+
+        boss.y +=
+            moveY;
+
+    }
+
+
+    // Melee attack
+
+    if (
+        distance < 130
+    ) {
+
+        const now =
+            Date.now();
+
+
+        if (
+            now -
+            boss.lastAttack >
+            boss.attackCooldown
+        ) {
+
+            boss.lastAttack =
+                now;
+
+
+            damagePlayer(
+                boss.damage
+            );
+
+        }
+
+    }
+
+
+    // Special skills
+
+    const now =
+        Date.now();
+
+
+    if (
+        now -
+        boss.lastSkill >
+        boss.skillCooldown
+    ) {
+
+        boss.lastSkill =
+            now;
+
+
+        bossSkill();
+
+    }
+
+}
+
+
+// ============================================================
+// BOSS SKILL
+// ============================================================
+
+function bossSkill() {
+
+    if (
+        boss.phase === 1
+    ) {
+
+        // Shadow projectile
+
+        createBossProjectile();
+
+    }
+
+    else {
+
+        // Phase 2 launches 3 projectiles
+
+        createBossProjectile(
+            -0.3
+        );
+
+        createBossProjectile(
+            0
+        );
+
+        createBossProjectile(
+            0.3
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// CREATE BOSS PROJECTILE
+// ============================================================
+
+function createBossProjectile(
+    spread = 0
+) {
+
+    const dx =
+        player.x -
+        boss.x;
+
+
+    const dy =
+        player.y -
+        boss.y;
+
+
+    const distance =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
+
+
+    if (
+        distance === 0
+    ) {
+
+        return;
+
+    }
+
+
+    let vx =
+        dx /
+        distance *
+        5;
+
+
+    let vy =
+        dy /
+        distance *
+        5;
+
+
+    // Spread
+
+    const angle =
+        Math.atan2(
+            vy,
+            vx
+        ) +
+        spread;
+
+
+    vx =
+        Math.cos(angle) *
+        5;
+
+
+    vy =
+        Math.sin(angle) *
+        5;
+
+
+    bossProjectiles.push({
+
+        x:
+            boss.x +
+            boss.width / 2,
+
+        y:
+            boss.y +
+            boss.height / 2,
+
+        vx: vx,
+
+        vy: vy,
+
+        radius: 10,
+
+        damage:
+            boss.phase === 1
+                ? 20
+                : 30,
+
+        life: 3000
+
+    });
+
+}
+
+
+// ============================================================
+// UPDATE BOSS PROJECTILES
+// ============================================================
+
+function updateBossProjectiles() {
+
+    for (
+        let i =
+            bossProjectiles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const projectile =
+            bossProjectiles[i];
+
+
+        projectile.x +=
+            projectile.vx;
+
+
+        projectile.y +=
+            projectile.vy;
+
+
+        projectile.life -=
+            16;
+
+
+        const projectileRect = {
+
+            x:
+                projectile.x -
+                projectile.radius,
+
+            y:
+                projectile.y -
+                projectile.radius,
+
+            width:
+                projectile.radius * 2,
+
+            height:
+                projectile.radius * 2
+
+        };
+
+
+        const playerRect = {
+
+            x: player.x,
+
+            y: player.y,
+
+            width:
+                player.width,
+
+            height:
+                player.height
+
+        };
+
+
+        if (
+            isColliding(
+                projectileRect,
+                playerRect
+            )
+        ) {
+
+            damagePlayer(
+                projectile.damage
+            );
+
+
+            bossProjectiles.splice(
+                i,
+                1
+            );
+
+
+            continue;
+
+        }
+
+
+        if (
+            projectile.life <= 0
+        ) {
+
+            bossProjectiles.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// DRAW BOSS PROJECTILES
+// ============================================================
+
+function drawBossProjectiles() {
+
+    for (
+        const projectile
+        of bossProjectiles
+    ) {
+
+        ctx.fillStyle =
+            "#8e44ad";
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            projectile.x -
+                camera.x,
+
+            projectile.y -
+                camera.y,
+
+            projectile.radius,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.fill();
+
+    }
+
+}
+
+
+// ============================================================
 // PLAYER DAMAGE
 // ============================================================
 
@@ -1008,7 +1613,7 @@ function damagePlayer(amount) {
     if (
         now -
         lastPlayerDamage <
-        500
+        400
     ) {
 
         return;
@@ -1089,7 +1694,8 @@ function createDamageNumber(
 
         life: 1000,
 
-        isPlayer: isPlayer
+        isPlayer:
+            isPlayer
 
     });
 
@@ -1113,9 +1719,12 @@ function updateDamageNumbers() {
             damageNumbers[i];
 
 
-        number.y -= 0.5;
+        number.y -=
+            0.5;
 
-        number.life -= 16;
+
+        number.life -=
+            16;
 
 
         if (
@@ -1143,6 +1752,7 @@ function drawDamageNumbers() {
     ctx.font =
         "bold 18px Arial";
 
+
     ctx.textAlign =
         "center";
 
@@ -1152,13 +1762,9 @@ function drawDamageNumbers() {
         of damageNumbers
     ) {
 
-        const alpha =
+        ctx.globalAlpha =
             number.life /
             1000;
-
-
-        ctx.globalAlpha =
-            alpha;
 
 
         ctx.fillStyle =
@@ -1173,10 +1779,10 @@ function drawDamageNumbers() {
             number.damage,
 
             number.x -
-            camera.x,
+                camera.x,
 
             number.y -
-            camera.y
+                camera.y
 
         );
 
@@ -1206,9 +1812,7 @@ function createDeathEffect(
 
         radius: 10,
 
-        maxRadius: 50,
-
-        life: 500,
+        life: 700,
 
         color: color
 
@@ -1269,13 +1873,9 @@ function drawDeathEffects() {
         of deathEffects
     ) {
 
-        const alpha =
-            effect.life /
-            500;
-
-
         ctx.globalAlpha =
-            alpha;
+            effect.life /
+            700;
 
 
         ctx.strokeStyle =
@@ -1368,10 +1968,13 @@ function drawWorld() {
 
 
     ctx.fillRect(
+
         0,
         0,
+
         canvas.width,
         canvas.height
+
     );
 
 
@@ -1407,16 +2010,22 @@ function drawWorld() {
 
 
         ctx.moveTo(
+
             x -
                 camera.x,
+
             0
+
         );
 
 
         ctx.lineTo(
+
             x -
                 camera.x,
+
             canvas.height
+
         );
 
 
@@ -1437,16 +2046,22 @@ function drawWorld() {
 
 
         ctx.moveTo(
+
             0,
+
             y -
                 camera.y
+
         );
 
 
         ctx.lineTo(
+
             canvas.width,
+
             y -
                 camera.y
+
         );
 
 
@@ -1549,8 +2164,6 @@ function drawEnemies() {
             camera.y;
 
 
-        // Flash when hit
-
         if (
             enemy.hitFlash > 0
         ) {
@@ -1567,8 +2180,6 @@ function drawEnemies() {
 
         }
 
-
-        // Body
 
         ctx.fillRect(
 
@@ -1694,6 +2305,328 @@ function drawEnemies() {
 
 
 // ============================================================
+// DRAW BOSS
+// ============================================================
+
+function drawBoss() {
+
+    if (
+        !boss.active ||
+        !boss.alive
+    ) {
+
+        return;
+
+    }
+
+
+    const screenX =
+        boss.x -
+        camera.x;
+
+
+    const screenY =
+        boss.y -
+        camera.y;
+
+
+    // Boss color
+
+    if (
+        boss.hitFlash > 0
+    ) {
+
+        ctx.fillStyle =
+            "#ffffff";
+
+    }
+
+    else if (
+        boss.phase === 2
+    ) {
+
+        ctx.fillStyle =
+            "#ff1744";
+
+    }
+
+    else {
+
+        ctx.fillStyle =
+            "#6a1b9a";
+
+    }
+
+
+    // Body
+
+    ctx.fillRect(
+
+        screenX,
+
+        screenY,
+
+        boss.width,
+
+        boss.height
+
+    );
+
+
+    // Horns
+
+    ctx.fillStyle =
+        "#eeeeee";
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        screenX + 15,
+        screenY
+    );
+
+
+    ctx.lineTo(
+        screenX + 5,
+        screenY - 25
+    );
+
+
+    ctx.lineTo(
+        screenX + 30,
+        screenY
+    );
+
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        screenX + 70,
+        screenY
+    );
+
+
+    ctx.lineTo(
+        screenX + 95,
+        screenY - 25
+    );
+
+
+    ctx.lineTo(
+        screenX + 85,
+        screenY
+    );
+
+
+    ctx.fill();
+
+
+    // Eyes
+
+    ctx.fillStyle =
+        "#ffeb3b";
+
+
+    ctx.fillRect(
+
+        screenX + 20,
+
+        screenY + 30,
+
+        15,
+
+        10
+
+    );
+
+
+    ctx.fillRect(
+
+        screenX + 65,
+
+        screenY + 30,
+
+        15,
+
+        10
+
+    );
+
+
+    // Boss outline
+
+    ctx.strokeStyle =
+        "#111";
+
+
+    ctx.lineWidth = 4;
+
+
+    ctx.strokeRect(
+
+        screenX,
+
+        screenY,
+
+        boss.width,
+
+        boss.height
+
+    );
+
+}
+
+
+// ============================================================
+// BOSS HUD
+// ============================================================
+
+function drawBossHUD() {
+
+    if (
+        !boss.active ||
+        !boss.alive
+    ) {
+
+        return;
+
+    }
+
+
+    const barWidth =
+        Math.min(
+            700,
+            canvas.width - 100
+        );
+
+
+    const barHeight = 28;
+
+
+    const x =
+        canvas.width / 2 -
+        barWidth / 2;
+
+
+    const y = 25;
+
+
+    // Background
+
+    ctx.fillStyle =
+        "#222";
+
+
+    ctx.fillRect(
+
+        x,
+
+        y,
+
+        barWidth,
+
+        barHeight
+
+    );
+
+
+    // HP
+
+    const hpPercent =
+        boss.hp /
+        boss.maxHp;
+
+
+    if (
+        boss.phase === 2
+    ) {
+
+        ctx.fillStyle =
+            "#ff1744";
+
+    }
+
+    else {
+
+        ctx.fillStyle =
+            "#8e44ad";
+
+    }
+
+
+    ctx.fillRect(
+
+        x,
+
+        y,
+
+        barWidth *
+            hpPercent,
+
+        barHeight
+
+    );
+
+
+    // Border
+
+    ctx.strokeStyle =
+        "#ffffff";
+
+
+    ctx.lineWidth = 3;
+
+
+    ctx.strokeRect(
+
+        x,
+
+        y,
+
+        barWidth,
+
+        barHeight
+
+    );
+
+
+    // Name
+
+    ctx.font =
+        "bold 20px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.fillText(
+
+        "👑 " +
+        boss.name +
+        " - PHASE " +
+        boss.phase,
+
+        canvas.width / 2,
+
+        y + 21
+
+    );
+
+}
+
+
+// ============================================================
 // DRAW PLAYER
 // ============================================================
 
@@ -1708,8 +2641,6 @@ function drawPlayer() {
         player.y -
         camera.y;
 
-
-    // Body
 
     ctx.fillStyle =
         "#4b6cff";
@@ -1826,8 +2757,6 @@ function drawPlayer() {
 
     }
 
-
-    // Outline
 
     ctx.strokeStyle =
         "#111";
@@ -1953,6 +2882,10 @@ function update() {
 
     updateEnemies();
 
+    updateBoss();
+
+    updateBossProjectiles();
+
     updateDamageNumbers();
 
     updateDeathEffects();
@@ -1973,9 +2906,11 @@ function draw() {
     ctx.clearRect(
 
         0,
+
         0,
 
         canvas.width,
+
         canvas.height
 
     );
@@ -1987,6 +2922,10 @@ function draw() {
 
     drawEnemies();
 
+    drawBossProjectiles();
+
+    drawBoss();
+
     drawDeathEffects();
 
     drawPlayer();
@@ -1994,6 +2933,8 @@ function draw() {
     drawAttackEffect();
 
     drawDamageNumbers();
+
+    drawBossHUD();
 
 }
 
