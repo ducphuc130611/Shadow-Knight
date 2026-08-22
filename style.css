@@ -1,91 +1,127 @@
 * {
+
     margin: 0;
     padding: 0;
+
     box-sizing: border-box;
+
 }
 
 body {
+
     background: #111;
+
     color: white;
 
     font-family: Arial, sans-serif;
 
     overflow: hidden;
+
 }
 
+
 #game-container {
+
     position: relative;
 
     width: 100vw;
+
     height: 100vh;
+
 }
 
+
 #gameCanvas {
+
     display: block;
 
     width: 100%;
+
     height: 100%;
 
     background: #222;
+
 }
+
 
 /* =========================
    HUD
 ========================= */
 
 #hud {
+
     position: absolute;
 
     top: 20px;
+
     left: 20px;
 
     width: 300px;
 
     pointer-events: none;
+
 }
 
-.player-info {
-    background: rgba(0, 0, 0, 0.75);
 
-    border: 2px solid #555;
+.player-info {
+
+    background:
+        rgba(0, 0, 0, 0.78);
+
+    border:
+
+        2px solid #555;
+
     border-radius: 10px;
 
     padding: 12px;
+
 }
 
+
 .name {
+
     font-size: 20px;
+
     font-weight: bold;
 
     margin-bottom: 8px;
+
 }
 
-/* HP */
 
 .bar-container {
+
     width: 100%;
+
     height: 18px;
 
     background: #333;
 
     border: 1px solid #777;
+
     border-radius: 10px;
 
     overflow: hidden;
+
 }
 
+
 #hp-bar {
+
     width: 100%;
+
     height: 100%;
 
     background: #e53935;
 
     transition: width 0.2s;
+
 }
 
-/* Stats */
 
 .stats {
+
     display: flex;
 
     flex-direction: column;
@@ -95,19 +131,154 @@ body {
     margin-top: 8px;
 
     font-size: 14px;
+
 }
 
-/* Controls */
 
-#controls {
+/* =========================
+   INVENTORY
+========================= */
+
+#inventory {
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 20px;
+
+    width: 260px;
+
+    background:
+        rgba(0, 0, 0, 0.82);
+
+    border:
+        2px solid #777;
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+}
+
+
+.inventory-title {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+
+}
+
+
+.equipment {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    border-bottom:
+        1px solid #555;
+
+    padding-bottom: 10px;
+
+}
+
+
+.items {
+
+    margin-top: 10px;
+
+}
+
+
+/* =========================
+   SHOP
+========================= */
+
+#shop {
+
     position: absolute;
 
     bottom: 20px;
+
+    right: 20px;
+
+    width: 260px;
+
+    background:
+        rgba(0, 0, 0, 0.85);
+
+    border:
+        2px solid #777;
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+}
+
+
+.shop-title {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+
+}
+
+
+#shop button {
+
+    width: 100%;
+
+    margin-top: 6px;
+
+    padding: 8px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #444;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+
+#shop button:hover {
+
+    background: #666;
+
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+#controls {
+
+    position: absolute;
+
+    bottom: 20px;
+
     left: 50%;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
-    background: rgba(0, 0, 0, 0.75);
+    background:
+        rgba(0, 0, 0, 0.75);
 
     padding: 10px 18px;
 
@@ -115,5 +286,7 @@ body {
 
     font-size: 14px;
 
-    border: 1px solid #555;
+    border:
+        1px solid #555;
+
 }
