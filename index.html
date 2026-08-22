@@ -1,50 +1,208 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Shadow Knight</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 <body>
 
-    <div id="game-container">
+<div id="game-container">
 
-        <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas"></canvas>
 
-        <!-- HUD -->
-        <div id="hud">
 
-            <div class="player-info">
-                <div class="name">
-                    ⚔️ Shadow Knight
-                </div>
+    <!-- =========================
+         PLAYER HUD
+    ========================== -->
 
-                <div class="bar-container">
-                    <div id="hp-bar"></div>
-                </div>
+    <div id="hud">
 
-                <div class="stats">
-                    <span id="hp-text">HP: 100 / 100</span>
-                    <span id="level-text">Level: 1</span>
-                    <span id="xp-text">XP: 0 / 100</span>
-                    <span id="gold-text">💰 Gold: 0</span>
-                </div>
+        <div class="player-info">
+
+            <div class="name">
+                ⚔️ Shadow Knight
+            </div>
+
+            <div class="bar-container">
+
+                <div id="hp-bar"></div>
+
+            </div>
+
+            <div class="stats">
+
+                <span id="hp-text">
+                    HP: 100 / 100
+                </span>
+
+                <span id="level-text">
+                    Level: 1
+                </span>
+
+                <span id="xp-text">
+                    XP: 0 / 100
+                </span>
+
+                <span id="gold-text">
+                    💰 Gold: 0
+                </span>
+
+                <span id="damage-text">
+                    ⚔️ Damage: 25
+                </span>
+
             </div>
 
         </div>
 
-        <!-- Controls -->
-        <div id="controls">
-            <b>WASD / Arrow Keys</b> - Di chuyển
+    </div>
+
+
+    <!-- =========================
+         INVENTORY
+    ========================== -->
+
+    <div id="inventory">
+
+        <div class="inventory-title">
+            🎒 INVENTORY
+        </div>
+
+
+        <div class="equipment">
+
+            <div>
+                🗡️
+                <span id="weapon-name">
+                    Wooden Sword
+                </span>
+            </div>
+
+            <div>
+                🛡️
+                <span id="armor-name">
+                    Cloth Armor
+                </span>
+            </div>
+
+            <div>
+                👟
+                <span id="boots-name">
+                    Old Boots
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="items">
+
+            <div>
+                🧪 Potion:
+                <span id="potion-count">
+                    0
+                </span>
+            </div>
+
         </div>
 
     </div>
 
-    <script src="game.js"></script>
+
+    <!-- =========================
+         SHOP
+    ========================== -->
+
+    <div id="shop">
+
+        <div class="shop-title">
+            🛒 SHOP
+        </div>
+
+
+        <button onclick="buyPotion()">
+
+            🧪 Potion
+            <br>
+
+            30 Gold
+
+        </button>
+
+
+        <button onclick="buySword()">
+
+            🗡️ Iron Sword
+            <br>
+
+            150 Gold
+
+        </button>
+
+
+        <button onclick="buyArmor()">
+
+            🛡️ Iron Armor
+            <br>
+
+            200 Gold
+
+        </button>
+
+
+        <button onclick="buyBoots()">
+
+            👟 Swift Boots
+            <br>
+
+            175 Gold
+
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         CONTROLS
+    ========================== -->
+
+    <div id="controls">
+
+        <b>WASD / Arrow Keys</b>
+        - Di chuyển
+
+        <br>
+
+        <b>SPACE</b>
+        - Tấn công
+
+        <br>
+
+        <b>Q</b>
+        - Dùng Potion
+
+    </div>
+
+</div>
+
+
+<script src="game.js"></script>
 
 </body>
+
 </html>
