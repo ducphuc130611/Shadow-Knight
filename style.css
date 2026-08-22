@@ -1,47 +1,27 @@
 * {
-
     margin: 0;
     padding: 0;
-
     box-sizing: border-box;
-
 }
-
 
 body {
-
     background: #111;
-
     color: white;
-
     font-family: Arial, sans-serif;
-
     overflow: hidden;
-
 }
-
 
 #game-container {
-
     position: relative;
-
     width: 100vw;
-
     height: 100vh;
-
 }
 
-
 #gameCanvas {
-
     display: block;
-
     width: 100%;
-
     height: 100%;
-
     background: #477a3a;
-
 }
 
 
@@ -50,86 +30,48 @@ body {
 ========================================================= */
 
 #hud {
-
     position: absolute;
-
     top: 20px;
-
     left: 20px;
-
     width: 300px;
-
     pointer-events: none;
-
 }
-
 
 .player-info {
-
     background: rgba(0, 0, 0, 0.82);
-
     border: 2px solid #777;
-
     border-radius: 10px;
-
     padding: 12px;
-
 }
-
 
 .name {
-
     font-size: 20px;
-
     font-weight: bold;
-
     margin-bottom: 8px;
-
 }
-
 
 .bar-container {
-
     width: 100%;
-
     height: 18px;
-
     background: #333;
-
     border: 1px solid #777;
-
     border-radius: 10px;
-
     overflow: hidden;
-
 }
-
 
 #hp-bar {
-
     width: 100%;
-
     height: 100%;
-
     background: #e53935;
-
     transition: width 0.2s;
-
 }
 
-
 .stats {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 4px;
-
     margin-top: 8px;
-
     font-size: 14px;
-
 }
 
 
@@ -138,59 +80,39 @@ body {
 ========================================================= */
 
 #inventory-button {
-
     position: absolute;
-
     top: 190px;
-
     left: 20px;
-
     padding: 10px 18px;
-
     background: #222;
-
     border: 2px solid #777;
-
     color: white;
-
     border-radius: 8px;
-
     cursor: pointer;
-
     font-size: 15px;
-
 }
 
-
 #inventory-button:hover {
-
     background: #444;
-
 }
 
 
 /* =========================================================
-   INVENTORY WINDOW
+   INVENTORY
 ========================================================= */
 
 #inventory-window {
-
     position: absolute;
-
     top: 50%;
-
     left: 50%;
-
     transform: translate(-50%, -50%);
 
     width: 520px;
-
     max-width: 90vw;
 
     background: rgba(15, 15, 20, 0.97);
 
     border: 3px solid #777;
-
     border-radius: 12px;
 
     padding: 15px;
@@ -199,63 +121,41 @@ body {
 
     box-shadow:
         0 0 30px rgba(0, 0, 0, 0.8);
-
 }
-
 
 .hidden {
-
     display: none;
-
 }
 
-
 .inventory-header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
 
     font-size: 22px;
-
     font-weight: bold;
 
     margin-bottom: 15px;
-
 }
 
-
 .inventory-header button {
-
     width: 32px;
-
     height: 32px;
 
     border: none;
-
     background: #922;
-
     color: white;
 
     border-radius: 5px;
-
     cursor: pointer;
-
 }
 
-
 .inventory-title {
-
     margin-top: 15px;
-
     margin-bottom: 8px;
 
     font-weight: bold;
-
     color: #ddd;
-
 }
 
 
@@ -264,54 +164,35 @@ body {
 ========================================================= */
 
 .equipment-panel {
-
     display: flex;
-
     gap: 8px;
-
     flex-wrap: wrap;
-
 }
-
 
 .equipment-title {
-
     width: 100%;
-
     margin-bottom: 3px;
-
     color: #aaa;
-
 }
 
-
 .equipment-slot {
-
     flex: 1;
-
     min-width: 140px;
-
     min-height: 55px;
 
     background: #292929;
 
     border: 2px solid #555;
-
     border-radius: 7px;
 
     padding: 8px;
 
     cursor: pointer;
-
 }
 
-
 .equipment-slot:hover {
-
     background: #3a3a3a;
-
     border-color: #aaa;
-
 }
 
 
@@ -320,98 +201,62 @@ body {
 ========================================================= */
 
 .inventory-grid {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(5, 1fr);
-
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-
 }
 
-
 .inventory-slot {
-
     aspect-ratio: 1;
 
     background: #222;
 
     border: 2px solid #555;
-
     border-radius: 7px;
 
     display: flex;
-
     flex-direction: column;
 
     justify-content: center;
-
     align-items: center;
 
     cursor: pointer;
 
     position: relative;
-
 }
-
 
 .inventory-slot:hover {
-
     background: #3a3a3a;
-
     border-color: #fff;
-
 }
-
 
 .inventory-icon {
-
     font-size: 28px;
-
 }
 
-
 .inventory-count {
-
     position: absolute;
-
     bottom: 4px;
-
     right: 6px;
 
     font-size: 13px;
-
     font-weight: bold;
-
 }
-
 
 .item-common {
-
     border-color: #777;
-
 }
-
 
 .item-uncommon {
-
     border-color: #43a047;
-
 }
-
 
 .item-rare {
-
     border-color: #2196f3;
-
 }
 
-
 .item-legendary {
-
     border-color: #ff9800;
-
 }
 
 
@@ -420,7 +265,6 @@ body {
 ========================================================= */
 
 .item-description {
-
     min-height: 65px;
 
     margin-top: 12px;
@@ -434,7 +278,82 @@ body {
     padding: 10px;
 
     color: #ddd;
+}
 
+
+/* =========================================================
+   QUEST
+========================================================= */
+
+#quest-panel {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 280px;
+
+    background: rgba(0, 0, 0, 0.88);
+
+    border: 2px solid #b8860b;
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+    z-index: 10;
+}
+
+.quest-header {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: #ffd54f;
+
+    border-bottom: 1px solid #555;
+
+    padding-bottom: 8px;
+
+    margin-bottom: 10px;
+}
+
+#quest-content {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+#quest-content h3 {
+    color: #ffd54f;
+    margin-bottom: 8px;
+}
+
+#quest-content p {
+    margin-bottom: 7px;
+}
+
+#quest-content button {
+    width: 100%;
+
+    padding: 9px;
+
+    margin-top: 8px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #8b6508;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#quest-content button:hover {
+    background: #b8860b;
 }
 
 
@@ -443,11 +362,9 @@ body {
 ========================================================= */
 
 #shop {
-
     position: absolute;
 
     bottom: 55px;
-
     right: 20px;
 
     width: 260px;
@@ -459,23 +376,17 @@ body {
     border-radius: 10px;
 
     padding: 12px;
-
 }
 
-
 .shop-title {
-
     font-size: 20px;
 
     font-weight: bold;
 
     margin-bottom: 10px;
-
 }
 
-
 #shop button {
-
     width: 100%;
 
     margin-top: 6px;
@@ -491,25 +402,18 @@ body {
     color: white;
 
     cursor: pointer;
-
 }
-
 
 #shop button:hover {
-
     background: #555;
-
 }
 
-
 #shop button span {
-
     display: block;
 
     color: #ffd54f;
 
     margin-top: 3px;
-
 }
 
 
@@ -518,11 +422,9 @@ body {
 ========================================================= */
 
 #message {
-
     position: absolute;
 
     top: 100px;
-
     left: 50%;
 
     transform: translateX(-50%);
@@ -540,14 +442,10 @@ body {
     pointer-events: none;
 
     z-index: 30;
-
 }
 
-
 #message.show {
-
     opacity: 1;
-
 }
 
 
@@ -556,11 +454,9 @@ body {
 ========================================================= */
 
 #controls {
-
     position: absolute;
 
     bottom: 10px;
-
     left: 50%;
 
     transform: translateX(-50%);
@@ -574,5 +470,4 @@ body {
     font-size: 13px;
 
     white-space: nowrap;
-
 }
