@@ -12,10 +12,7 @@
 
     <title>Shadow Knight</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -59,7 +56,7 @@
                 </span>
 
                 <span id="gold-text">
-                    💰 Gold: 0
+                    💰 Gold: 300
                 </span>
 
                 <span id="damage-text">
@@ -74,51 +71,86 @@
 
 
     <!-- =========================
-         INVENTORY
+         INVENTORY BUTTON
     ========================== -->
 
-    <div id="inventory">
+    <button
+        id="inventory-button"
+        onclick="toggleInventory()"
+    >
+        🎒 Inventory
+    </button>
+
+
+    <!-- =========================
+         INVENTORY WINDOW
+    ========================== -->
+
+    <div
+        id="inventory-window"
+        class="hidden"
+    >
+
+        <div class="inventory-header">
+
+            <span>🎒 INVENTORY</span>
+
+            <button onclick="toggleInventory()">
+                ✕
+            </button>
+
+        </div>
+
+
+        <div
+            id="equipment-panel"
+            class="equipment-panel"
+        >
+
+            <div class="equipment-title">
+                EQUIPMENT
+            </div>
+
+            <div
+                id="weapon-slot"
+                class="equipment-slot"
+            >
+                🗡️ Weapon
+            </div>
+
+            <div
+                id="armor-slot"
+                class="equipment-slot"
+            >
+                🛡️ Armor
+            </div>
+
+            <div
+                id="boots-slot"
+                class="equipment-slot"
+            >
+                👟 Boots
+            </div>
+
+        </div>
+
 
         <div class="inventory-title">
-            🎒 INVENTORY
+            ITEMS
         </div>
 
 
-        <div class="equipment">
-
-            <div>
-                🗡️
-                <span id="weapon-name">
-                    Wooden Sword
-                </span>
-            </div>
-
-            <div>
-                🛡️
-                <span id="armor-name">
-                    Cloth Armor
-                </span>
-            </div>
-
-            <div>
-                👟
-                <span id="boots-name">
-                    Old Boots
-                </span>
-            </div>
-
-        </div>
+        <div
+            id="inventory-grid"
+            class="inventory-grid"
+        ></div>
 
 
-        <div class="items">
-
-            <div>
-                🧪 Potion:
-                <span id="potion-count">
-                    0
-                </span>
-            </div>
-
+        <div
+            id="item-description"
+            class="item-description"
+        >
+            Chọn một item để xem thông tin.
         </div>
 
     </div>
@@ -135,45 +167,57 @@
         </div>
 
 
-        <button onclick="buyPotion()">
+        <button onclick="buyItem('healthPotion')">
 
-            🧪 Potion
-            <br>
+            🧪 Health Potion
 
-            30 Gold
-
-        </button>
-
-
-        <button onclick="buySword()">
-
-            🗡️ Iron Sword
-            <br>
-
-            150 Gold
+            <span>
+                30 Gold
+            </span>
 
         </button>
 
 
-        <button onclick="buyArmor()">
+        <button onclick="buyItem('ironSword')">
+
+            ⚔️ Iron Sword
+
+            <span>
+                150 Gold
+            </span>
+
+        </button>
+
+
+        <button onclick="buyItem('ironArmor')">
 
             🛡️ Iron Armor
-            <br>
 
-            200 Gold
+            <span>
+                200 Gold
+            </span>
 
         </button>
 
 
-        <button onclick="buyBoots()">
+        <button onclick="buyItem('swiftBoots')">
 
             👟 Swift Boots
-            <br>
 
-            175 Gold
+            <span>
+                175 Gold
+            </span>
 
         </button>
 
+    </div>
+
+
+    <!-- =========================
+         MESSAGE
+    ========================== -->
+
+    <div id="message">
     </div>
 
 
@@ -183,24 +227,39 @@
 
     <div id="controls">
 
-        <b>WASD / Arrow Keys</b>
-        - Di chuyển
+        <b>WASD / Arrow</b> Di chuyển
 
-        <br>
+        &nbsp; | &nbsp;
 
-        <b>SPACE</b>
-        - Tấn công
+        <b>SPACE</b> Tấn công
 
-        <br>
+        &nbsp; | &nbsp;
 
-        <b>Q</b>
-        - Dùng Potion
+        <b>Q</b> Potion
+
+        &nbsp; | &nbsp;
+
+        <b>E</b> Nhặt đồ
+
+        &nbsp; | &nbsp;
+
+        <b>I</b> Inventory
 
     </div>
 
 </div>
 
+
+<!-- IMPORTANT:
+     items.js trước
+     inventory.js sau
+     drops.js sau
+     game.js cuối
+-->
+
 <script src="items.js"></script>
+<script src="inventory.js"></script>
+<script src="drops.js"></script>
 <script src="game.js"></script>
 
 </body>
