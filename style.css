@@ -7,6 +7,7 @@
 
 }
 
+
 body {
 
     background: #111;
@@ -39,14 +40,14 @@ body {
 
     height: 100%;
 
-    background: #222;
+    background: #477a3a;
 
 }
 
 
-/* =========================
+/* =========================================================
    HUD
-========================= */
+========================================================= */
 
 #hud {
 
@@ -65,12 +66,9 @@ body {
 
 .player-info {
 
-    background:
-        rgba(0, 0, 0, 0.78);
+    background: rgba(0, 0, 0, 0.82);
 
-    border:
-
-        2px solid #555;
+    border: 2px solid #777;
 
     border-radius: 10px;
 
@@ -135,86 +133,328 @@ body {
 }
 
 
-/* =========================
-   INVENTORY
-========================= */
+/* =========================================================
+   INVENTORY BUTTON
+========================================================= */
 
-#inventory {
+#inventory-button {
 
     position: absolute;
 
-    top: 20px;
+    top: 190px;
 
-    right: 20px;
+    left: 20px;
 
-    width: 260px;
+    padding: 10px 18px;
 
-    background:
-        rgba(0, 0, 0, 0.82);
+    background: #222;
 
-    border:
-        2px solid #777;
+    border: 2px solid #777;
 
-    border-radius: 10px;
+    color: white;
 
-    padding: 12px;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+
+#inventory-button:hover {
+
+    background: #444;
+
+}
+
+
+/* =========================================================
+   INVENTORY WINDOW
+========================================================= */
+
+#inventory-window {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 520px;
+
+    max-width: 90vw;
+
+    background: rgba(15, 15, 20, 0.97);
+
+    border: 3px solid #777;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    z-index: 20;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8);
+
+}
+
+
+.hidden {
+
+    display: none;
+
+}
+
+
+.inventory-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+
+}
+
+
+.inventory-header button {
+
+    width: 32px;
+
+    height: 32px;
+
+    border: none;
+
+    background: #922;
+
+    color: white;
+
+    border-radius: 5px;
+
+    cursor: pointer;
 
 }
 
 
 .inventory-title {
 
-    font-size: 20px;
+    margin-top: 15px;
+
+    margin-bottom: 8px;
 
     font-weight: bold;
 
-    margin-bottom: 12px;
+    color: #ddd;
 
 }
 
 
-.equipment {
+/* =========================================================
+   EQUIPMENT
+========================================================= */
+
+.equipment-panel {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.equipment-title {
+
+    width: 100%;
+
+    margin-bottom: 3px;
+
+    color: #aaa;
+
+}
+
+
+.equipment-slot {
+
+    flex: 1;
+
+    min-width: 140px;
+
+    min-height: 55px;
+
+    background: #292929;
+
+    border: 2px solid #555;
+
+    border-radius: 7px;
+
+    padding: 8px;
+
+    cursor: pointer;
+
+}
+
+
+.equipment-slot:hover {
+
+    background: #3a3a3a;
+
+    border-color: #aaa;
+
+}
+
+
+/* =========================================================
+   INVENTORY GRID
+========================================================= */
+
+.inventory-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 8px;
+
+}
+
+
+.inventory-slot {
+
+    aspect-ratio: 1;
+
+    background: #222;
+
+    border: 2px solid #555;
+
+    border-radius: 7px;
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 8px;
+    justify-content: center;
 
-    border-bottom:
-        1px solid #555;
+    align-items: center;
 
-    padding-bottom: 10px;
+    cursor: pointer;
 
-}
-
-
-.items {
-
-    margin-top: 10px;
+    position: relative;
 
 }
 
 
-/* =========================
+.inventory-slot:hover {
+
+    background: #3a3a3a;
+
+    border-color: #fff;
+
+}
+
+
+.inventory-icon {
+
+    font-size: 28px;
+
+}
+
+
+.inventory-count {
+
+    position: absolute;
+
+    bottom: 4px;
+
+    right: 6px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+}
+
+
+.item-common {
+
+    border-color: #777;
+
+}
+
+
+.item-uncommon {
+
+    border-color: #43a047;
+
+}
+
+
+.item-rare {
+
+    border-color: #2196f3;
+
+}
+
+
+.item-legendary {
+
+    border-color: #ff9800;
+
+}
+
+
+/* =========================================================
+   ITEM DESCRIPTION
+========================================================= */
+
+.item-description {
+
+    min-height: 65px;
+
+    margin-top: 12px;
+
+    background: #191919;
+
+    border: 1px solid #444;
+
+    border-radius: 7px;
+
+    padding: 10px;
+
+    color: #ddd;
+
+}
+
+
+/* =========================================================
    SHOP
-========================= */
+========================================================= */
 
 #shop {
 
     position: absolute;
 
-    bottom: 20px;
+    bottom: 55px;
 
     right: 20px;
 
     width: 260px;
 
-    background:
-        rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.87);
 
-    border:
-        2px solid #777;
+    border: 2px solid #777;
 
     border-radius: 10px;
 
@@ -240,13 +480,13 @@ body {
 
     margin-top: 6px;
 
-    padding: 8px;
+    padding: 9px;
 
     border: none;
 
     border-radius: 6px;
 
-    background: #444;
+    background: #333;
 
     color: white;
 
@@ -257,36 +497,82 @@ body {
 
 #shop button:hover {
 
-    background: #666;
+    background: #555;
 
 }
 
 
-/* =========================
+#shop button span {
+
+    display: block;
+
+    color: #ffd54f;
+
+    margin-top: 3px;
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+#message {
+
+    position: absolute;
+
+    top: 100px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(0, 0, 0, 0.85);
+
+    padding: 10px 20px;
+
+    border-radius: 8px;
+
+    opacity: 0;
+
+    transition: opacity 0.2s;
+
+    pointer-events: none;
+
+    z-index: 30;
+
+}
+
+
+#message.show {
+
+    opacity: 1;
+
+}
+
+
+/* =========================================================
    CONTROLS
-========================= */
+========================================================= */
 
 #controls {
 
     position: absolute;
 
-    bottom: 20px;
+    bottom: 10px;
 
     left: 50%;
 
-    transform:
-        translateX(-50%);
+    transform: translateX(-50%);
 
-    background:
-        rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.75);
 
-    padding: 10px 18px;
+    padding: 8px 15px;
 
     border-radius: 8px;
 
-    font-size: 14px;
+    font-size: 13px;
 
-    border:
-        1px solid #555;
+    white-space: nowrap;
 
 }
