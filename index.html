@@ -2,7 +2,6 @@
 <html lang="vi">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -13,7 +12,6 @@
     <title>Shadow Knight</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -22,11 +20,7 @@
 
     <canvas id="gameCanvas"></canvas>
 
-
-    <!-- =========================
-         PLAYER HUD
-    ========================== -->
-
+    <!-- PLAYER HUD -->
     <div id="hud">
 
         <div class="player-info">
@@ -36,9 +30,7 @@
             </div>
 
             <div class="bar-container">
-
                 <div id="hp-bar"></div>
-
             </div>
 
             <div class="stats">
@@ -70,10 +62,7 @@
     </div>
 
 
-    <!-- =========================
-         INVENTORY BUTTON
-    ========================== -->
-
+    <!-- INVENTORY BUTTON -->
     <button
         id="inventory-button"
         onclick="toggleInventory()"
@@ -82,10 +71,7 @@
     </button>
 
 
-    <!-- =========================
-         INVENTORY WINDOW
-    ========================== -->
-
+    <!-- INVENTORY -->
     <div
         id="inventory-window"
         class="hidden"
@@ -101,11 +87,7 @@
 
         </div>
 
-
-        <div
-            id="equipment-panel"
-            class="equipment-panel"
-        >
+        <div class="equipment-panel">
 
             <div class="equipment-title">
                 EQUIPMENT
@@ -134,17 +116,14 @@
 
         </div>
 
-
         <div class="inventory-title">
             ITEMS
         </div>
-
 
         <div
             id="inventory-grid"
             class="inventory-grid"
         ></div>
-
 
         <div
             id="item-description"
@@ -156,93 +135,65 @@
     </div>
 
 
-    <!-- =========================
-         SHOP
-    ========================== -->
+    <!-- QUEST -->
+    <div id="quest-panel">
 
+        <div class="quest-header">
+            📜 QUEST
+        </div>
+
+        <div id="quest-content">
+            Đang tải nhiệm vụ...
+        </div>
+
+    </div>
+
+
+    <!-- SHOP -->
     <div id="shop">
 
         <div class="shop-title">
             🛒 SHOP
         </div>
 
-
         <button onclick="buyItem('healthPotion')">
-
             🧪 Health Potion
-
-            <span>
-                30 Gold
-            </span>
-
+            <span>30 Gold</span>
         </button>
-
 
         <button onclick="buyItem('ironSword')">
-
             ⚔️ Iron Sword
-
-            <span>
-                150 Gold
-            </span>
-
+            <span>150 Gold</span>
         </button>
-
 
         <button onclick="buyItem('ironArmor')">
-
             🛡️ Iron Armor
-
-            <span>
-                200 Gold
-            </span>
-
+            <span>200 Gold</span>
         </button>
-
 
         <button onclick="buyItem('swiftBoots')">
-
             👟 Swift Boots
-
-            <span>
-                175 Gold
-            </span>
-
+            <span>175 Gold</span>
         </button>
 
     </div>
 
 
-    <!-- =========================
-         MESSAGE
-    ========================== -->
-
-    <div id="message">
-    </div>
+    <!-- MESSAGE -->
+    <div id="message"></div>
 
 
-    <!-- =========================
-         CONTROLS
-    ========================== -->
-
+    <!-- CONTROLS -->
     <div id="controls">
 
         <b>WASD / Arrow</b> Di chuyển
-
         &nbsp; | &nbsp;
-
         <b>SPACE</b> Tấn công
-
         &nbsp; | &nbsp;
-
         <b>Q</b> Potion
-
         &nbsp; | &nbsp;
-
-        <b>E</b> Nhặt đồ
-
+        <b>E</b> NPC / Nhặt đồ
         &nbsp; | &nbsp;
-
         <b>I</b> Inventory
 
     </div>
@@ -250,18 +201,11 @@
 </div>
 
 
-<!-- IMPORTANT:
-     items.js trước
-     inventory.js sau
-     drops.js sau
-     game.js cuối
--->
-
 <script src="items.js"></script>
 <script src="inventory.js"></script>
 <script src="drops.js"></script>
+<script src="quests.js"></script>
 <script src="game.js"></script>
 
 </body>
-
 </html>
