@@ -1,15 +1,19 @@
 // ============================================================
 // SHADOW KNIGHT
-// STEP 5
-// INVENTORY + ITEMS + EQUIPMENT + POTIONS
+// STEP 6
 // ============================================================
 
 
 const canvas =
-    document.getElementById("gameCanvas");
+    document.getElementById(
+        "gameCanvas"
+    );
+
 
 const ctx =
-    canvas.getContext("2d");
+    canvas.getContext(
+        "2d"
+    );
 
 
 // ============================================================
@@ -26,10 +30,12 @@ function resizeCanvas() {
 
 }
 
+
 window.addEventListener(
     "resize",
     resizeCanvas
 );
+
 
 resizeCanvas();
 
@@ -38,11 +44,16 @@ resizeCanvas();
 // WORLD
 // ============================================================
 
-const WORLD_WIDTH = 3000;
+const WORLD_WIDTH =
+    3000;
 
-const WORLD_HEIGHT = 2000;
 
-const TILE_SIZE = 50;
+const WORLD_HEIGHT =
+    2000;
+
+
+const TILE_SIZE =
+    50;
 
 
 // ============================================================
@@ -51,126 +62,53 @@ const TILE_SIZE = 50;
 
 const player = {
 
-    x: WORLD_WIDTH / 2,
+    x:
+        WORLD_WIDTH / 2,
 
-    y: WORLD_HEIGHT / 2,
+    y:
+        WORLD_HEIGHT / 2,
 
-    width: 32,
+    width:
+        32,
 
-    height: 32,
+    height:
+        32,
 
-    speed: 4,
+    speed:
+        4,
 
+    hp:
+        100,
 
-    hp: 100,
+    maxHp:
+        100,
 
-    maxHp: 100,
+    level:
+        1,
 
+    xp:
+        0,
 
-    level: 1,
+    maxXp:
+        100,
 
-    xp: 0,
+    gold:
+        300,
 
-    maxXp: 100,
+    baseDamage:
+        25,
 
+    damage:
+        25,
 
-    gold: 300,
+    direction:
+        "down",
 
+    attackCooldown:
+        400,
 
-    baseDamage: 25,
-
-    damage: 25,
-
-
-    direction: "down",
-
-
-    attackCooldown: 400,
-
-    lastAttack: 0,
-
-
-    potionCount: 3,
-
-    potionCooldown: 1000,
-
-    lastPotion: 0
-
-};
-
-
-// ============================================================
-// EQUIPMENT
-// ============================================================
-
-const equipment = {
-
-    weapon: {
-
-        name: "Wooden Sword",
-
-        damage: 0
-
-    },
-
-
-    armor: {
-
-        name: "Cloth Armor",
-
-        maxHp: 0
-
-    },
-
-
-    boots: {
-
-        name: "Old Boots",
-
-        speed: 0
-
-    }
-
-};
-
-
-// ============================================================
-// SHOP ITEMS
-// ============================================================
-
-const shopItems = {
-
-    ironSword: {
-
-        name: "Iron Sword",
-
-        price: 150,
-
-        damage: 15
-
-    },
-
-
-    ironArmor: {
-
-        name: "Iron Armor",
-
-        price: 200,
-
-        maxHp: 50
-
-    },
-
-
-    swiftBoots: {
-
-        name: "Swift Boots",
-
-        price: 175,
-
-        speed: 1
-
-    }
+    lastAttack:
+        0
 
 };
 
@@ -189,7 +127,7 @@ const camera = {
 
 
 // ============================================================
-// KEYBOARD
+// INPUT
 // ============================================================
 
 const keys = {};
@@ -203,10 +141,13 @@ window.addEventListener(
             event.key.toLowerCase();
 
 
-        keys[key] = true;
+        keys[key] =
+            true;
 
 
-        if (key === " ") {
+        if (
+            key === " "
+        ) {
 
             attack();
 
@@ -215,9 +156,11 @@ window.addEventListener(
         }
 
 
-        if (key === "q") {
+        if (
+            key === "q"
+        ) {
 
-            usePotion();
+            usePotionFromInventory();
 
         }
 
@@ -251,8 +194,8 @@ const obstacles = [
         width: 200,
 
         height: 100
-    },
 
+    },
 
     {
         x: 1000,
@@ -262,8 +205,8 @@ const obstacles = [
         width: 250,
 
         height: 100
-    },
 
+    },
 
     {
         x: 1500,
@@ -273,8 +216,8 @@ const obstacles = [
         width: 150,
 
         height: 250
-    },
 
+    },
 
     {
         x: 2000,
@@ -284,8 +227,8 @@ const obstacles = [
         width: 300,
 
         height: 100
-    },
 
+    },
 
     {
         x: 700,
@@ -295,82 +238,110 @@ const obstacles = [
         width: 100,
 
         height: 300
+
     }
 
 ];
 
 
 // ============================================================
-// ENEMY TYPES
+// ENEMIES
 // ============================================================
 
 const enemyTypes = [
 
     {
 
-        name: "Goblin",
+        name:
+            "Goblin",
 
-        width: 32,
+        width:
+            32,
 
-        height: 32,
+        height:
+            32,
 
-        hp: 50,
+        hp:
+            50,
 
-        damage: 8,
+        damage:
+            8,
 
-        speed: 1.6,
+        speed:
+            1.6,
 
-        xp: 30,
+        xp:
+            30,
 
-        gold: 8,
+        gold:
+            8,
 
-        color: "#4caf50"
-
-    },
-
-
-    {
-
-        name: "Orc",
-
-        width: 42,
-
-        height: 42,
-
-        hp: 120,
-
-        damage: 15,
-
-        speed: 0.8,
-
-        xp: 70,
-
-        gold: 20,
-
-        color: "#795548"
+        color:
+            "#4caf50"
 
     },
 
 
     {
 
-        name: "Demon",
+        name:
+            "Orc",
 
-        width: 38,
+        width:
+            42,
 
-        height: 38,
+        height:
+            42,
 
-        hp: 180,
+        hp:
+            120,
 
-        damage: 22,
+        damage:
+            15,
 
-        speed: 1.1,
+        speed:
+            0.8,
 
-        xp: 120,
+        xp:
+            70,
 
-        gold: 35,
+        gold:
+            20,
 
-        color: "#9c27b0"
+        color:
+            "#795548"
+
+    },
+
+
+    {
+
+        name:
+            "Demon",
+
+        width:
+            38,
+
+        height:
+            38,
+
+        hp:
+            180,
+
+        damage:
+            22,
+
+        speed:
+            1.1,
+
+        xp:
+            120,
+
+        gold:
+            35,
+
+        color:
+            "#9c27b0"
 
     }
 
@@ -379,9 +350,73 @@ const enemyTypes = [
 
 const enemies = [];
 
-const MAX_ENEMIES = 8;
 
-let enemyId = 0;
+const MAX_ENEMIES =
+    8;
+
+
+let enemyId =
+    0;
+
+
+// ============================================================
+// BOSS
+// ============================================================
+
+const boss = {
+
+    active:
+        true,
+
+    alive:
+        true,
+
+    name:
+        "Shadow Lord",
+
+    x:
+        2300,
+
+    y:
+        1500,
+
+    width:
+        100,
+
+    height:
+        100,
+
+    hp:
+        1000,
+
+    maxHp:
+        1000,
+
+    damage:
+        30,
+
+    speed:
+        0.65,
+
+    phase:
+        1,
+
+    lastAttack:
+        0,
+
+    attackCooldown:
+        1500,
+
+    lastSkill:
+        0,
+
+    skillCooldown:
+        4000,
+
+    hitFlash:
+        0
+
+};
 
 
 // ============================================================
@@ -396,53 +431,13 @@ const bossProjectiles = [];
 
 
 // ============================================================
-// BOSS
-// ============================================================
-
-const boss = {
-
-    active: true,
-
-    alive: true,
-
-    name: "Shadow Lord",
-
-    x: 2300,
-
-    y: 1500,
-
-    width: 100,
-
-    height: 100,
-
-    hp: 1000,
-
-    maxHp: 1000,
-
-    damage: 30,
-
-    speed: 0.65,
-
-    phase: 1,
-
-    lastAttack: 0,
-
-    attackCooldown: 1500,
-
-    lastSkill: 0,
-
-    skillCooldown: 4000,
-
-    hitFlash: 0
-
-};
-
-
-// ============================================================
 // UTILITY
 // ============================================================
 
-function random(min, max) {
+function random(
+    min,
+    max
+) {
 
     return Math.random() *
         (max - min) +
@@ -451,13 +446,20 @@ function random(min, max) {
 }
 
 
-function distanceBetween(a, b) {
+function distanceBetween(
+    a,
+    b
+) {
 
     const dx =
-        a.x - b.x;
+        a.x -
+        b.x;
+
 
     const dy =
-        a.y - b.y;
+        a.y -
+        b.y;
+
 
     return Math.sqrt(
         dx * dx +
@@ -471,20 +473,27 @@ function distanceBetween(a, b) {
 // COLLISION
 // ============================================================
 
-function isColliding(a, b) {
+function isColliding(
+    a,
+    b
+) {
 
     return (
 
         a.x <
-        b.x + b.width &&
+        b.x +
+        b.width &&
 
-        a.x + a.width >
+        a.x +
+        a.width >
         b.x &&
 
         a.y <
-        b.y + b.height &&
+        b.y +
+        b.height &&
 
-        a.y + a.height >
+        a.y +
+        a.height >
         b.y
 
     );
@@ -492,17 +501,24 @@ function isColliding(a, b) {
 }
 
 
-function canMoveTo(x, y) {
+function canMoveTo(
+    x,
+    y
+) {
 
     const rect = {
 
-        x: x,
+        x:
+            x,
 
-        y: y,
+        y:
+            y,
 
-        width: player.width,
+        width:
+            player.width,
 
-        height: player.height
+        height:
+            player.height
 
     };
 
@@ -537,19 +553,46 @@ function canMoveTo(x, y) {
 
 function updatePlayerStats() {
 
+    const weapon =
+        getItem(
+            equipment.weapon
+        );
+
+
+    const armor =
+        getItem(
+            equipment.armor
+        );
+
+
+    const boots =
+        getItem(
+            equipment.boots
+        );
+
+
     player.damage =
         player.baseDamage +
-        equipment.weapon.damage;
+        (
+            weapon.damage ||
+            0
+        );
 
 
     player.maxHp =
         100 +
-        equipment.armor.maxHp;
+        (
+            armor.maxHp ||
+            0
+        );
 
 
     player.speed =
         4 +
-        equipment.boots.speed;
+        (
+            boots.speed ||
+            0
+        );
 
 
     if (
@@ -566,7 +609,7 @@ function updatePlayerStats() {
 
 
 // ============================================================
-// PLAYER MOVEMENT
+// MOVEMENT
 // ============================================================
 
 function updatePlayer() {
@@ -581,7 +624,8 @@ function updatePlayer() {
         keys["arrowup"]
     ) {
 
-        dy -= player.speed;
+        dy -=
+            player.speed;
 
         player.direction =
             "up";
@@ -594,7 +638,8 @@ function updatePlayer() {
         keys["arrowdown"]
     ) {
 
-        dy += player.speed;
+        dy +=
+            player.speed;
 
         player.direction =
             "down";
@@ -607,7 +652,8 @@ function updatePlayer() {
         keys["arrowleft"]
     ) {
 
-        dx -= player.speed;
+        dx -=
+            player.speed;
 
         player.direction =
             "left";
@@ -620,7 +666,8 @@ function updatePlayer() {
         keys["arrowright"]
     ) {
 
-        dx += player.speed;
+        dx +=
+            player.speed;
 
         player.direction =
             "right";
@@ -633,9 +680,11 @@ function updatePlayer() {
         dy !== 0
     ) {
 
-        dx *= 0.7071;
+        dx *=
+            0.7071;
 
-        dy *= 0.7071;
+        dy *=
+            0.7071;
 
     }
 
@@ -647,7 +696,8 @@ function updatePlayer() {
         )
     ) {
 
-        player.x += dx;
+        player.x +=
+            dx;
 
     }
 
@@ -659,7 +709,8 @@ function updatePlayer() {
         )
     ) {
 
-        player.y += dy;
+        player.y +=
+            dy;
 
     }
 
@@ -667,9 +718,11 @@ function updatePlayer() {
     player.x =
         Math.max(
             0,
+
             Math.min(
                 WORLD_WIDTH -
-                    player.width,
+                player.width,
+
                 player.x
             )
         );
@@ -678,9 +731,11 @@ function updatePlayer() {
     player.y =
         Math.max(
             0,
+
             Math.min(
                 WORLD_HEIGHT -
-                    player.height,
+                player.height,
+
                 player.y
             )
         );
@@ -692,351 +747,41 @@ function updatePlayer() {
 // POTION
 // ============================================================
 
-function usePotion() {
+function usePotionFromInventory() {
 
-    const now =
-        Date.now();
-
-
-    if (
-        player.potionCount <= 0
+    for (
+        let i = 0;
+        i < inventory.length;
+        i++
     ) {
 
-        return;
-
-    }
-
-
-    if (
-        now -
-        player.lastPotion <
-        player.potionCooldown
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        player.hp >=
-        player.maxHp
-    ) {
-
-        return;
-
-    }
-
-
-    player.lastPotion =
-        now;
-
-
-    player.potionCount--;
-
-
-    player.hp += 50;
-
-
-    if (
-        player.hp >
-        player.maxHp
-    ) {
-
-        player.hp =
-            player.maxHp;
-
-    }
-
-
-    console.log(
-        "🧪 Potion used!"
-    );
-
-}
-
-
-// ============================================================
-// BUY POTION
-// ============================================================
-
-function buyPotion() {
-
-    if (
-        player.gold < 30
-    ) {
-
-        alert(
-            "Không đủ Gold!"
-        );
-
-        return;
-
-    }
-
-
-    player.gold -= 30;
-
-    player.potionCount++;
-
-
-    updateHUD();
-
-}
-
-
-// ============================================================
-// BUY SWORD
-// ============================================================
-
-function buySword() {
-
-    if (
-        player.gold <
-        shopItems.ironSword.price
-    ) {
-
-        alert(
-            "Không đủ Gold!"
-        );
-
-        return;
-
-    }
-
-
-    player.gold -=
-        shopItems.ironSword.price;
-
-
-    equipment.weapon =
-        shopItems.ironSword;
-
-
-    updatePlayerStats();
-
-    updateHUD();
-
-
-    alert(
-        "🗡️ Đã trang bị Iron Sword!"
-    );
-
-}
-
-
-// ============================================================
-// BUY ARMOR
-// ============================================================
-
-function buyArmor() {
-
-    if (
-        player.gold <
-        shopItems.ironArmor.price
-    ) {
-
-        alert(
-            "Không đủ Gold!"
-        );
-
-        return;
-
-    }
-
-
-    player.gold -=
-        shopItems.ironArmor.price;
-
-
-    equipment.armor =
-        shopItems.ironArmor;
-
-
-    updatePlayerStats();
-
-    updateHUD();
-
-
-    alert(
-        "🛡️ Đã trang bị Iron Armor!"
-    );
-
-}
-
-
-// ============================================================
-// BUY BOOTS
-// ============================================================
-
-function buyBoots() {
-
-    if (
-        player.gold <
-        shopItems.swiftBoots.price
-    ) {
-
-        alert(
-            "Không đủ Gold!"
-        );
-
-        return;
-
-    }
-
-
-    player.gold -=
-        shopItems.swiftBoots.price;
-
-
-    equipment.boots =
-        shopItems.swiftBoots;
-
-
-    updatePlayerStats();
-
-    updateHUD();
-
-
-    alert(
-        "👟 Đã trang bị Swift Boots!"
-    );
-
-}
-
-
-// ============================================================
-// SPAWN ENEMY
-// ============================================================
-
-function spawnEnemy() {
-
-    if (
-        enemies.length >=
-        MAX_ENEMIES
-    ) {
-
-        return;
-
-    }
-
-
-    const type =
-        enemyTypes[
-            Math.floor(
-                Math.random() *
-                enemyTypes.length
-            )
-        ];
-
-
-    let x;
-
-    let y;
-
-    let attempts = 0;
-
-
-    do {
-
-        x =
-            random(
-                100,
-                WORLD_WIDTH - 100
+        const slot =
+            inventory[i];
+
+
+        if (
+            slot &&
+            slot.id ===
+            "healthPotion"
+        ) {
+
+            useInventoryPotion(
+                i,
+                getItem(
+                    "healthPotion"
+                )
             );
 
+            return;
 
-        y =
-            random(
-                100,
-                WORLD_HEIGHT - 100
-            );
-
-
-        attempts++;
+        }
 
     }
 
-    while (
 
-        distanceBetween(
-            {
-                x: x,
-                y: y
-            },
-            player
-        ) < 500
-
-        &&
-
-        attempts < 100
-
+    showMessage(
+        "🧪 Không có Potion!"
     );
-
-
-    enemies.push({
-
-        id:
-            enemyId++,
-
-        type:
-            type.name,
-
-        x: x,
-
-        y: y,
-
-        width:
-            type.width,
-
-        height:
-            type.height,
-
-        hp:
-            type.hp,
-
-        maxHp:
-            type.hp,
-
-        damage:
-            type.damage,
-
-        speed:
-            type.speed,
-
-        xp:
-            type.xp,
-
-        gold:
-            type.gold,
-
-        color:
-            type.color,
-
-        alive:
-            true,
-
-        lastAttack:
-            0,
-
-        attackCooldown:
-            900,
-
-        hitFlash:
-            0
-
-    });
-
-}
-
-
-for (
-    let i = 0;
-    i < MAX_ENEMIES;
-    i++
-) {
-
-    spawnEnemy();
 
 }
 
@@ -1047,14 +792,17 @@ for (
 
 function getAttackBox() {
 
-    const size = 60;
+    const size =
+        60;
 
 
     const box = {
 
-        x: player.x,
+        x:
+            player.x,
 
-        y: player.y,
+        y:
+            player.y,
 
         width:
             player.width,
@@ -1071,19 +819,21 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x - 14;
+            player.x -
+            14;
 
         box.y =
-            player.y - size;
+            player.y -
+            size;
 
         box.width =
-            player.width + 28;
+            player.width +
+            28;
 
         box.height =
             size;
 
     }
-
 
     else if (
         player.direction ===
@@ -1091,20 +841,21 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x - 14;
+            player.x -
+            14;
 
         box.y =
             player.y +
             player.height;
 
         box.width =
-            player.width + 28;
+            player.width +
+            28;
 
         box.height =
             size;
 
     }
-
 
     else if (
         player.direction ===
@@ -1112,19 +863,21 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x - size;
+            player.x -
+            size;
 
         box.y =
-            player.y - 14;
+            player.y -
+            14;
 
         box.width =
             size;
 
         box.height =
-            player.height + 28;
+            player.height +
+            28;
 
     }
-
 
     else {
 
@@ -1133,13 +886,15 @@ function getAttackBox() {
             player.width;
 
         box.y =
-            player.y - 14;
+            player.y -
+            14;
 
         box.width =
             size;
 
         box.height =
-            player.height + 28;
+            player.height +
+            28;
 
     }
 
@@ -1215,7 +970,8 @@ function attack() {
 
 
             if (
-                enemy.hp <= 0
+                enemy.hp <=
+                0
             ) {
 
                 killEnemy(
@@ -1251,7 +1007,9 @@ function attack() {
 // KILL ENEMY
 // ============================================================
 
-function killEnemy(enemy) {
+function killEnemy(
+    enemy
+) {
 
     enemy.alive =
         false;
@@ -1272,16 +1030,13 @@ function killEnemy(enemy) {
     );
 
 
-    // Chance to drop potion
+    // Item drop
 
-    if (
-        Math.random() <
-        0.25
-    ) {
-
-        player.potionCount++;
-
-    }
+    createEnemyDrop(
+        enemy.type,
+        enemy.x,
+        enemy.y
+    );
 
 
     checkLevelUp();
@@ -1311,7 +1066,9 @@ function killEnemy(enemy) {
             spawnEnemy();
 
         },
+
         3000
+
     );
 
 }
@@ -1337,7 +1094,8 @@ function checkLevelUp() {
 
         player.maxXp =
             Math.floor(
-                player.maxXp * 1.5
+                player.maxXp *
+                1.5
             );
 
 
@@ -1349,7 +1107,9 @@ function checkLevelUp() {
             player.maxHp;
 
 
-        updatePlayerStats();
+        showMessage(
+            `⭐ LEVEL UP! Level ${player.level}`
+        );
 
     }
 
@@ -1357,10 +1117,12 @@ function checkLevelUp() {
 
 
 // ============================================================
-// BOSS DAMAGE
+// BOSS
 // ============================================================
 
-function damageBoss(amount) {
+function damageBoss(
+    amount
+) {
 
     if (
         !boss.alive
@@ -1376,43 +1138,52 @@ function damageBoss(amount) {
 
 
     boss.hitFlash =
-        150;
+        120;
 
 
     createDamageNumber(
-        boss.x +
-            boss.width / 2,
-
+        boss.x,
         boss.y,
-
         amount
     );
 
 
     if (
         boss.hp <=
-            boss.maxHp * 0.5
+        boss.maxHp *
+        0.5
         &&
         boss.phase === 1
     ) {
 
-        boss.phase = 2;
+        boss.phase =
+            2;
 
-        boss.speed = 1.1;
+        boss.speed =
+            1.1;
 
-        boss.damage = 45;
+        boss.damage =
+            45;
 
         boss.attackCooldown =
             1000;
+
+
+        showMessage(
+            "🔥 SHADOW LORD PHASE 2!"
+        );
 
     }
 
 
     if (
-        boss.hp <= 0
+        boss.hp <=
+        0
     ) {
 
-        boss.hp = 0;
+        boss.hp =
+            0;
+
 
         bossDeath();
 
@@ -1420,10 +1191,6 @@ function damageBoss(amount) {
 
 }
 
-
-// ============================================================
-// BOSS DEATH
-// ============================================================
 
 function bossDeath() {
 
@@ -1437,29 +1204,22 @@ function bossDeath() {
     player.xp +=
         500;
 
-
     player.gold +=
         500;
 
 
-    player.hp =
-        player.maxHp;
+    createItemDrop(
+        "shadowBlade",
+        boss.x,
+        boss.y
+    );
 
 
-    // Guaranteed rare item
-
-    equipment.weapon = {
-
-        name:
-            "Shadow Blade",
-
-        damage:
-            35
-
-    };
-
-
-    updatePlayerStats();
+    createItemDrop(
+        "shadowCrystal",
+        boss.x + 50,
+        boss.y
+    );
 
 
     createDeathEffect(
@@ -1469,19 +1229,13 @@ function bossDeath() {
     );
 
 
-    alert(
-
-        "👑 SHADOW LORD DEFEATED!\n\n" +
-
-        "⭐ +500 XP\n" +
-
-        "💰 +500 Gold\n\n" +
-
-        "🗡️ Bạn nhận được:\n" +
-
-        "Shadow Blade (+35 Damage)"
-
+    showMessage(
+        "👑 SHADOW LORD DEFEATED! " +
+        "💎 Đồ huyền thoại đã rơi!"
     );
+
+
+    checkLevelUp();
 
 
     setTimeout(
@@ -1491,10 +1245,6 @@ function bossDeath() {
 
 }
 
-
-// ============================================================
-// BOSS RESPAWN
-// ============================================================
 
 function respawnBoss() {
 
@@ -1532,6 +1282,147 @@ function respawnBoss() {
 
 
 // ============================================================
+// SPAWN ENEMY
+// ============================================================
+
+function spawnEnemy() {
+
+    if (
+        enemies.length >=
+        MAX_ENEMIES
+    ) {
+
+        return;
+
+    }
+
+
+    const type =
+        enemyTypes[
+            Math.floor(
+                Math.random() *
+                enemyTypes.length
+            )
+        ];
+
+
+    let x;
+
+    let y;
+
+    let attempts =
+        0;
+
+
+    do {
+
+        x =
+            random(
+                100,
+                WORLD_WIDTH -
+                100
+            );
+
+
+        y =
+            random(
+                100,
+                WORLD_HEIGHT -
+                100
+            );
+
+
+        attempts++;
+
+    }
+
+    while (
+
+        distanceBetween(
+            {
+                x: x,
+                y: y
+            },
+            player
+        ) < 500
+
+        &&
+
+        attempts < 100
+
+    );
+
+
+    enemies.push({
+
+        id:
+            enemyId++,
+
+        type:
+            type.name,
+
+        x:
+            x,
+
+        y:
+            y,
+
+        width:
+            type.width,
+
+        height:
+            type.height,
+
+        hp:
+            type.hp,
+
+        maxHp:
+            type.hp,
+
+        damage:
+            type.damage,
+
+        speed:
+            type.speed,
+
+        xp:
+            type.xp,
+
+        gold:
+            type.gold,
+
+        color:
+            type.color,
+
+        alive:
+            true,
+
+        lastAttack:
+            0,
+
+        attackCooldown:
+            900,
+
+        hitFlash:
+            0
+
+    });
+
+}
+
+
+for (
+    let i = 0;
+    i < MAX_ENEMIES;
+    i++
+) {
+
+    spawnEnemy();
+
+}
+
+
+// ============================================================
 // ENEMY AI
 // ============================================================
 
@@ -1552,7 +1443,8 @@ function updateEnemies() {
 
 
         if (
-            enemy.hitFlash > 0
+            enemy.hitFlash >
+            0
         ) {
 
             enemy.hitFlash -=
@@ -1645,7 +1537,8 @@ function updateBoss() {
 
 
     if (
-        boss.hitFlash > 0
+        boss.hitFlash >
+        0
     ) {
 
         boss.hitFlash -=
@@ -1806,16 +1699,14 @@ function createBossProjectile() {
 }
 
 
-// ============================================================
-// UPDATE PROJECTILES
-// ============================================================
-
 function updateBossProjectiles() {
 
     for (
         let i =
             bossProjectiles.length - 1;
+
         i >= 0;
+
         i--
     ) {
 
@@ -1846,10 +1737,12 @@ function updateBossProjectiles() {
                 projectile.radius,
 
             width:
-                projectile.radius * 2,
+                projectile.radius *
+                2,
 
             height:
-                projectile.radius * 2
+                projectile.radius *
+                2
 
         };
 
@@ -1878,7 +1771,8 @@ function updateBossProjectiles() {
 
 
         if (
-            projectile.life <= 0
+            projectile.life <=
+            0
         ) {
 
             bossProjectiles.splice(
@@ -1897,10 +1791,13 @@ function updateBossProjectiles() {
 // PLAYER DAMAGE
 // ============================================================
 
-let lastPlayerDamage = 0;
+let lastPlayerDamage =
+    0;
 
 
-function damagePlayer(amount) {
+function damagePlayer(
+    amount
+) {
 
     const now =
         Date.now();
@@ -1929,7 +1826,8 @@ function damagePlayer(amount) {
         player.hp < 0
     ) {
 
-        player.hp = 0;
+        player.hp =
+            0;
 
     }
 
@@ -1943,7 +1841,8 @@ function damagePlayer(amount) {
 
 
     if (
-        player.hp <= 0
+        player.hp <=
+        0
     ) {
 
         playerDeath();
@@ -1953,24 +1852,103 @@ function damagePlayer(amount) {
 }
 
 
-// ============================================================
-// PLAYER DEATH
-// ============================================================
-
 function playerDeath() {
 
-    alert(
-        "💀 Shadow Knight đã chết!"
+    showMessage(
+        "💀 Bạn đã chết!"
     );
 
 
-    location.reload();
+    setTimeout(
+        function() {
+
+            location.reload();
+
+        },
+
+        1500
+    );
 
 }
 
 
 // ============================================================
-// DAMAGE NUMBER
+// SHOP
+// ============================================================
+
+function buyItem(
+    itemId
+) {
+
+    const prices = {
+
+        healthPotion:
+            30,
+
+        ironSword:
+            150,
+
+        ironArmor:
+            200,
+
+        swiftBoots:
+            175
+
+    };
+
+
+    const price =
+        prices[itemId];
+
+
+    if (
+        player.gold <
+        price
+    ) {
+
+        showMessage(
+            "💰 Không đủ Gold!"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !addItem(
+            itemId,
+            1
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    player.gold -=
+        price;
+
+
+    updateHUD();
+
+
+    const item =
+        getItem(
+            itemId
+        );
+
+
+    showMessage(
+        `🛒 Mua ${item.icon} ${item.name}`
+    );
+
+}
+
+
+// ============================================================
+// DAMAGE NUMBERS
 // ============================================================
 
 function createDamageNumber(
@@ -1982,13 +1960,17 @@ function createDamageNumber(
 
     damageNumbers.push({
 
-        x: x,
+        x:
+            x,
 
-        y: y,
+        y:
+            y,
 
-        damage: damage,
+        damage:
+            damage,
 
-        life: 1000,
+        life:
+            1000,
 
         isPlayer:
             isPlayer
@@ -2003,7 +1985,9 @@ function updateDamageNumbers() {
     for (
         let i =
             damageNumbers.length - 1;
+
         i >= 0;
+
         i--
     ) {
 
@@ -2020,7 +2004,8 @@ function updateDamageNumbers() {
 
 
         if (
-            number.life <= 0
+            number.life <=
+            0
         ) {
 
             damageNumbers.splice(
@@ -2067,23 +2052,24 @@ function drawDamageNumbers() {
             number.damage,
 
             number.x -
-                camera.x,
+            camera.x,
 
             number.y -
-                camera.y
+            camera.y
 
         );
 
     }
 
 
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha =
+        1;
 
 }
 
 
 // ============================================================
-// DEATH EFFECT
+// DEATH EFFECTS
 // ============================================================
 
 function createDeathEffect(
@@ -2094,15 +2080,20 @@ function createDeathEffect(
 
     deathEffects.push({
 
-        x: x,
+        x:
+            x,
 
-        y: y,
+        y:
+            y,
 
-        radius: 10,
+        radius:
+            10,
 
-        life: 700,
+        life:
+            700,
 
-        color: color
+        color:
+            color
 
     });
 
@@ -2114,7 +2105,9 @@ function updateDeathEffects() {
     for (
         let i =
             deathEffects.length - 1;
+
         i >= 0;
+
         i--
     ) {
 
@@ -2131,7 +2124,8 @@ function updateDeathEffects() {
 
 
         if (
-            effect.life <= 0
+            effect.life <=
+            0
         ) {
 
             deathEffects.splice(
@@ -2162,7 +2156,8 @@ function drawDeathEffects() {
             effect.color;
 
 
-        ctx.lineWidth = 5;
+        ctx.lineWidth =
+            5;
 
 
         ctx.beginPath();
@@ -2171,10 +2166,10 @@ function drawDeathEffects() {
         ctx.arc(
 
             effect.x -
-                camera.x,
+            camera.x,
 
             effect.y -
-                camera.y,
+            camera.y,
 
             effect.radius,
 
@@ -2190,7 +2185,8 @@ function drawDeathEffects() {
     }
 
 
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha =
+        1;
 
 }
 
@@ -2215,23 +2211,35 @@ function updateCamera() {
 
     camera.x =
         Math.max(
+
             0,
+
             Math.min(
+
                 WORLD_WIDTH -
-                    canvas.width,
+                canvas.width,
+
                 camera.x
+
             )
+
         );
 
 
     camera.y =
         Math.max(
+
             0,
+
             Math.min(
+
                 WORLD_HEIGHT -
-                    canvas.height,
+                canvas.height,
+
                 camera.y
+
             )
+
         );
 
 }
@@ -2250,9 +2258,11 @@ function drawWorld() {
     ctx.fillRect(
 
         0,
+
         0,
 
         canvas.width,
+
         canvas.height
 
     );
@@ -2279,27 +2289,37 @@ function drawWorld() {
 
 
     for (
-        let x = startX;
+        let x =
+            startX;
+
         x <
             camera.x +
             canvas.width;
-        x += TILE_SIZE
+
+        x +=
+            TILE_SIZE
     ) {
 
         ctx.beginPath();
 
 
         ctx.moveTo(
+
             x -
-                camera.x,
+            camera.x,
+
             0
+
         );
 
 
         ctx.lineTo(
+
             x -
-                camera.x,
+            camera.x,
+
             canvas.height
+
         );
 
 
@@ -2309,27 +2329,37 @@ function drawWorld() {
 
 
     for (
-        let y = startY;
+        let y =
+            startY;
+
         y <
             camera.y +
             canvas.height;
-        y += TILE_SIZE
+
+        y +=
+            TILE_SIZE
     ) {
 
         ctx.beginPath();
 
 
         ctx.moveTo(
+
             0,
+
             y -
-                camera.y
+            camera.y
+
         );
 
 
         ctx.lineTo(
+
             canvas.width,
+
             y -
-                camera.y
+            camera.y
+
         );
 
 
@@ -2351,25 +2381,17 @@ function drawObstacles() {
         of obstacles
     ) {
 
-        const screenX =
-            obstacle.x -
-            camera.x;
-
-
-        const screenY =
-            obstacle.y -
-            camera.y;
-
-
         ctx.fillStyle =
             "#31552b";
 
 
         ctx.fillRect(
 
-            screenX,
+            obstacle.x -
+            camera.x,
 
-            screenY,
+            obstacle.y -
+            camera.y,
 
             obstacle.width,
 
@@ -2382,14 +2404,17 @@ function drawObstacles() {
             "#1b3218";
 
 
-        ctx.lineWidth = 4;
+        ctx.lineWidth =
+            4;
 
 
         ctx.strokeRect(
 
-            screenX,
+            obstacle.x -
+            camera.x,
 
-            screenY,
+            obstacle.y -
+            camera.y,
 
             obstacle.width,
 
@@ -2471,8 +2496,8 @@ function drawEnemies() {
         ctx.fillRect(
 
             screenX +
-                enemy.width -
-                13,
+            enemy.width -
+            13,
 
             screenY + 8,
 
@@ -2482,8 +2507,6 @@ function drawEnemies() {
 
         );
 
-
-        // HP
 
         ctx.fillStyle =
             "#222";
@@ -2513,10 +2536,10 @@ function drawEnemies() {
             screenY - 10,
 
             enemy.width *
-                (
-                    enemy.hp /
-                    enemy.maxHp
-                ),
+            (
+                enemy.hp /
+                enemy.maxHp
+            ),
 
             5
 
@@ -2540,7 +2563,7 @@ function drawEnemies() {
             enemy.type,
 
             screenX +
-                enemy.width / 2,
+            enemy.width / 2,
 
             screenY - 15
 
@@ -2602,8 +2625,6 @@ function drawBoss() {
     );
 
 
-    // Horns
-
     ctx.fillStyle =
         "#eeeeee";
 
@@ -2656,8 +2677,6 @@ function drawBoss() {
     ctx.fill();
 
 
-    // Eyes
-
     ctx.fillStyle =
         "#ffeb3b";
 
@@ -2692,7 +2711,8 @@ function drawBoss() {
         "#111";
 
 
-    ctx.lineWidth = 4;
+    ctx.lineWidth =
+        4;
 
 
     ctx.strokeRect(
@@ -2711,7 +2731,7 @@ function drawBoss() {
 
 
 // ============================================================
-// BOSS PROJECTILES
+// PROJECTILES
 // ============================================================
 
 function drawBossProjectiles() {
@@ -2731,10 +2751,10 @@ function drawBossProjectiles() {
         ctx.arc(
 
             projectile.x -
-                camera.x,
+            camera.x,
 
             projectile.y -
-                camera.y,
+            camera.y,
 
             projectile.radius,
 
@@ -2775,7 +2795,8 @@ function drawBossHUD() {
         );
 
 
-    const barHeight = 28;
+    const barHeight =
+        28;
 
 
     const x =
@@ -2783,7 +2804,8 @@ function drawBossHUD() {
         barWidth / 2;
 
 
-    const y = 25;
+    const y =
+        25;
 
 
     ctx.fillStyle =
@@ -2816,10 +2838,10 @@ function drawBossHUD() {
         y,
 
         barWidth *
-            (
-                boss.hp /
-                boss.maxHp
-            ),
+        (
+            boss.hp /
+            boss.maxHp
+        ),
 
         barHeight
 
@@ -2830,7 +2852,8 @@ function drawBossHUD() {
         "#ffffff";
 
 
-    ctx.lineWidth = 3;
+    ctx.lineWidth =
+        3;
 
 
     ctx.strokeRect(
@@ -2875,7 +2898,7 @@ function drawBossHUD() {
 
 
 // ============================================================
-// DRAW PLAYER
+// PLAYER
 // ============================================================
 
 function drawPlayer() {
@@ -3006,7 +3029,8 @@ function drawPlayer() {
         "#111";
 
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth =
+        2;
 
 
     ctx.strokeRect(
@@ -3036,7 +3060,7 @@ function drawAttackEffect() {
 
     if (
         now -
-            player.lastAttack >
+        player.lastAttack >
         150
     ) {
 
@@ -3056,10 +3080,10 @@ function drawAttackEffect() {
     ctx.fillRect(
 
         box.x -
-            camera.x,
+        camera.x,
 
         box.y -
-            camera.y,
+        camera.y,
 
         box.width,
 
@@ -3087,7 +3111,8 @@ function updateHUD() {
     document.getElementById(
         "hp-bar"
     ).style.width =
-        hpPercent + "%";
+        hpPercent +
+        "%";
 
 
     document.getElementById(
@@ -3119,29 +3144,53 @@ function updateHUD() {
     ).textContent =
         `⚔️ Damage: ${player.damage}`;
 
-
-    document.getElementById(
-        "potion-count"
-    ).textContent =
-        player.potionCount;
+}
 
 
-    document.getElementById(
-        "weapon-name"
-    ).textContent =
-        equipment.weapon.name;
+// ============================================================
+// MESSAGE
+// ============================================================
+
+let messageTimer =
+    null;
 
 
-    document.getElementById(
-        "armor-name"
-    ).textContent =
-        equipment.armor.name;
+function showMessage(
+    text
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
 
 
-    document.getElementById(
-        "boots-name"
-    ).textContent =
-        equipment.boots.name;
+    message.textContent =
+        text;
+
+
+    message.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        messageTimer
+    );
+
+
+    messageTimer =
+        setTimeout(
+            function() {
+
+                message.classList.remove(
+                    "show"
+                );
+
+            },
+
+            1800
+        );
 
 }
 
@@ -3196,6 +3245,8 @@ function draw() {
 
     drawObstacles();
 
+    drawItemDrops();
+
     drawEnemies();
 
     drawBossProjectiles();
@@ -3231,5 +3282,17 @@ function gameLoop() {
 
 }
 
+
+// ============================================================
+// START
+// ============================================================
+
+initializeInventory();
+
+updatePlayerStats();
+
+renderInventory();
+
+updateHUD();
 
 gameLoop();
