@@ -4,10 +4,6 @@
 
 const INVENTORY_SIZE = 20;
 
-
-// Mỗi ô có:
-// { id: itemId, amount: number }
-
 const inventory = [];
 
 
@@ -16,13 +12,9 @@ const inventory = [];
 // ============================================================
 
 const equipment = {
-
     weapon: "woodenSword",
-
     armor: "clothArmor",
-
     boots: "oldBoots"
-
 };
 
 
@@ -32,33 +24,20 @@ const equipment = {
 
 function addItem(itemId, amount = 1) {
 
-    const item =
-        getItem(itemId);
-
+    const item = getItem(itemId);
 
     if (!item) {
-
-        console.error(
-            "Không tìm thấy item:",
-            itemId
-        );
-
+        console.error("Không tìm thấy item:", itemId);
         return false;
-
     }
 
-
-    // Potion/material có thể stack
 
     if (
         item.type === "potion" ||
         item.type === "material"
     ) {
 
-        for (
-            const slot
-            of inventory
-        ) {
+        for (const slot of inventory) {
 
             if (
                 slot &&
@@ -70,15 +49,10 @@ function addItem(itemId, amount = 1) {
                 renderInventory();
 
                 return true;
-
             }
-
         }
-
     }
 
-
-    // Item không stack
 
     for (
         let i = 0;
@@ -86,34 +60,23 @@ function addItem(itemId, amount = 1) {
         i++
     ) {
 
-        if (
-            !inventory[i]
-        ) {
+        if (!inventory[i]) {
 
             inventory[i] = {
-
                 id: itemId,
-
                 amount: amount
-
             };
-
 
             renderInventory();
 
             return true;
-
         }
-
     }
 
 
-    showMessage(
-        "🎒 Inventory đã đầy!"
-    );
+    showMessage("🎒 Inventory đã đầy!");
 
     return false;
-
 }
 
 
@@ -121,10 +84,7 @@ function addItem(itemId, amount = 1) {
 // REMOVE ITEM
 // ============================================================
 
-function removeItem(
-    itemId,
-    amount = 1
-) {
+function removeItem(itemId, amount = 1) {
 
     for (
         let i = 0;
@@ -132,55 +92,54 @@ function removeItem(
         i++
     ) {
 
-        const slot =
-            inventory[i];
-
+        const slot = inventory[i];
 
         if (
             slot &&
             slot.id === itemId
         ) {
 
-            slot.amount -=
-                amount;
+            slot.amount -= amount;
 
-
-            if (
-                slot.amount <= 0
-            ) {
-
-                inventory[i] =
-                    null;
-
+            if (slot.amount <= 0) {
+                inventory[i] = null;
             }
-
 
             renderInventory();
 
             return true;
-
         }
-
     }
 
-
     return false;
-
 }
 
 
 // ============================================================
-// FIND ITEM
+// ITEM COUNT
 // ============================================================
 
-function hasItem(itemId) {
+function getInventoryItemAmount(itemId) {
 
-    return inventory.some(
-        slot =>
+    let total = 0;
+
+    for (const slot of inventory) {
+
+        if (
             slot &&
             slot.id === itemId
-    );
+        ) {
 
+            total += slot.amount;
+        }
+    }
+
+    return total;
+}
+
+
+function hasItem(itemId) {
+    return getInventoryItemAmount(itemId) > 0;
 }
 
 
@@ -188,37 +147,22 @@ function hasItem(itemId) {
 // USE ITEM
 // ============================================================
 
-function useInventoryItem(
-    index
-) {
+function useInventoryItem(index) {
 
-    const slot =
-        inventory[index];
-
+    const slot = inventory[index];
 
     if (!slot) {
-
         return;
-
     }
 
-
-    const item =
-        getItem(slot.id);
-
+    const item = getItem(slot.id);
 
     if (!item) {
-
         return;
-
     }
 
 
-    // Potion
-
-    if (
-        item.type === "potion"
-    ) {
+    if (item.type === "potion") {
 
         useInventoryPotion(
             index,
@@ -226,11 +170,8 @@ function useInventoryItem(
         );
 
         return;
-
     }
 
-
-    // Equipment
 
     if (
         item.type === "weapon" ||
@@ -238,27 +179,16 @@ function useInventoryItem(
         item.type === "boots"
     ) {
 
-        equipItem(
-            index
-        );
+        equipItem(index);
 
         return;
-
     }
 
 
-    // Material
+    if (item.type === "material") {
 
-    if (
-        item.type === "material"
-    ) {
-
-        showItemDescription(
-            item
-        );
-
+        showItemDescription(item);
     }
-
 }
 
 
@@ -266,60 +196,35 @@ function useInventoryItem(
 // POTION
 // ============================================================
 
-function useInventoryPotion(
-    index,
-    item
-) {
+function useInventoryPotion(index, item) {
 
-    if (
-        player.hp >=
-        player.maxHp
-    ) {
+    if (player.hp >= player.maxHp) {
 
-        showMessage(
-            "❤️ HP đã đầy!"
-        );
+        showMessage("❤️ HP đã đầy!");
 
         return;
-
     }
 
 
-    player.hp +=
-        item.heal;
+    player.hp += item.heal;
 
 
-    if (
-        player.hp >
-        player.maxHp
-    ) {
-
-        player.hp =
-            player.maxHp;
-
+    if (player.hp > player.maxHp) {
+        player.hp = player.maxHp;
     }
 
 
     inventory[index].amount--;
 
 
-    if (
-        inventory[index].amount <= 0
-    ) {
-
-        inventory[index] =
-            null;
-
+    if (inventory[index].amount <= 0) {
+        inventory[index] = null;
     }
 
 
-    showMessage(
-        `🧪 +${item.heal} HP`
-    );
-
+    showMessage(`🧪 +${item.heal} HP`);
 
     renderInventory();
-
 }
 
 
@@ -329,93 +234,84 @@ function useInventoryPotion(
 
 function equipItem(index) {
 
-    const slot =
-        inventory[index];
-
+    const slot = inventory[index];
 
     if (!slot) {
-
         return;
-
     }
 
-
-    const item =
-        getItem(slot.id);
-
+    const item = getItem(slot.id);
 
     if (!item) {
-
         return;
-
     }
 
 
     let slotName;
 
 
-    if (
-        item.type === "weapon"
-    ) {
-
-        slotName =
-            "weapon";
-
+    if (item.type === "weapon") {
+        slotName = "weapon";
     }
-
-    else if (
-        item.type === "armor"
-    ) {
-
-        slotName =
-            "armor";
-
+    else if (item.type === "armor") {
+        slotName = "armor";
     }
-
-    else if (
-        item.type === "boots"
-    ) {
-
-        slotName =
-            "boots";
-
+    else if (item.type === "boots") {
+        slotName = "boots";
     }
-
     else {
-
         return;
-
     }
 
-
-    // Item đang trang bị
 
     const oldItemId =
         equipment[slotName];
 
 
-    // Đưa item cũ vào inventory
+    /*
+     * Đưa item cũ vào inventory.
+     *
+     * Không gọi addItem trực tiếp ở đây
+     * vì inventory có thể đang đầy.
+     */
 
-    if (oldItemId) {
+    let emptySlot = -1;
 
-        addItem(
-            oldItemId,
-            1
-        );
+    for (
+        let i = 0;
+        i < INVENTORY_SIZE;
+        i++
+    ) {
 
+        if (
+            !inventory[i] ||
+            i === index
+        ) {
+
+            emptySlot = i;
+            break;
+        }
     }
 
 
-    // Trang bị item mới
+    if (emptySlot === -1) {
+
+        showMessage(
+            "🎒 Không đủ chỗ để thay trang bị!"
+        );
+
+        return;
+    }
+
+
+    inventory[index] = {
+        id: oldItemId,
+        amount: 1
+    };
+
 
     equipment[slotName] =
         item.id;
-
-
-    // Xóa item khỏi inventory
-
-    inventory[index] =
-        null;
 
 
     updatePlayerStats();
@@ -428,7 +324,6 @@ function equipItem(index) {
     showMessage(
         `⚔️ Đã trang bị ${item.name}!`
     );
-
 }
 
 
@@ -436,60 +331,63 @@ function equipItem(index) {
 // UNEQUIP
 // ============================================================
 
-function unequipItem(
-    slotName
-) {
+function unequipItem(slotName) {
 
     const itemId =
         equipment[slotName];
 
 
     if (!itemId) {
-
         return;
-
     }
 
 
-    if (
-        !addItem(
-            itemId,
-            1
-        )
+    let emptySlot = -1;
+
+
+    for (
+        let i = 0;
+        i < INVENTORY_SIZE;
+        i++
     ) {
 
-        return;
+        if (!inventory[i]) {
 
+            emptySlot = i;
+            break;
+        }
     }
 
 
-    // Đặt về item mặc định
+    if (emptySlot === -1) {
 
-    if (
-        slotName === "weapon"
-    ) {
+        showMessage(
+            "🎒 Inventory đầy!"
+        );
 
+        return;
+    }
+
+
+    inventory[emptySlot] = {
+        id: itemId,
+        amount: 1
+    };
+
+
+    if (slotName === "weapon") {
         equipment.weapon =
             "woodenSword";
-
     }
 
-    else if (
-        slotName === "armor"
-    ) {
-
+    else if (slotName === "armor") {
         equipment.armor =
             "clothArmor";
-
     }
 
-    else if (
-        slotName === "boots"
-    ) {
-
+    else if (slotName === "boots") {
         equipment.boots =
             "oldBoots";
-
     }
 
 
@@ -515,9 +413,7 @@ function renderInventory() {
 
 
     if (!grid) {
-
         return;
-
     }
 
 
@@ -530,19 +426,17 @@ function renderInventory() {
         i++
     ) {
 
-        const slot =
+        const slotElement =
             document.createElement(
                 "div"
             );
 
 
-        slot.className =
+        slotElement.className =
             "inventory-slot";
 
 
-        if (
-            inventory[i]
-        ) {
+        if (inventory[i]) {
 
             const item =
                 getItem(
@@ -552,68 +446,57 @@ function renderInventory() {
 
             if (item) {
 
-                slot.classList.add(
+                slotElement.classList.add(
                     `item-${item.rarity}`
                 );
 
 
-                slot.innerHTML = `
+                slotElement.innerHTML = `
 
                     <div class="inventory-icon">
-
                         ${item.icon}
-
                     </div>
 
                     ${
                         inventory[i].amount > 1
-
-                        ? `<div class="inventory-count">
+                        ?
+                        `<div class="inventory-count">
                             x${inventory[i].amount}
-                           </div>`
-
-                        : ""
-
+                        </div>`
+                        :
+                        ""
                     }
 
                 `;
 
 
-                slot.onclick =
-                    function() {
+                slotElement.onclick =
+                    function () {
 
-                        useInventoryItem(
-                            i
-                        );
+                        useInventoryItem(i);
 
                     };
 
 
-                slot.oncontextmenu =
-                    function(event) {
+                slotElement.oncontextmenu =
+                    function (event) {
 
                         event.preventDefault();
 
-                        showItemDescription(
-                            item
-                        );
+                        showItemDescription(item);
 
                     };
-
             }
-
         }
 
 
         grid.appendChild(
-            slot
+            slotElement
         );
-
     }
 
 
     renderEquipment();
-
 }
 
 
@@ -628,12 +511,10 @@ function renderEquipment() {
             equipment.weapon
         );
 
-
     const armor =
         getItem(
             equipment.armor
         );
-
 
     const boots =
         getItem(
@@ -646,12 +527,10 @@ function renderEquipment() {
             "weapon-slot"
         );
 
-
     const armorSlot =
         document.getElementById(
             "armor-slot"
         );
-
 
     const bootsSlot =
         document.getElementById(
@@ -662,7 +541,6 @@ function renderEquipment() {
     weaponSlot.innerHTML = `
 
         ${weapon.icon}
-
         ${weapon.name}
 
         <br>
@@ -670,14 +548,12 @@ function renderEquipment() {
         <small>
             +${weapon.damage || 0} Damage
         </small>
-
     `;
 
 
     armorSlot.innerHTML = `
 
         ${armor.icon}
-
         ${armor.name}
 
         <br>
@@ -685,14 +561,12 @@ function renderEquipment() {
         <small>
             +${armor.maxHp || 0} Max HP
         </small>
-
     `;
 
 
     bootsSlot.innerHTML = `
 
         ${boots.icon}
-
         ${boots.name}
 
         <br>
@@ -700,49 +574,28 @@ function renderEquipment() {
         <small>
             +${boots.speed || 0} Speed
         </small>
-
     `;
 
 
-    weaponSlot.onclick =
-        function() {
+    weaponSlot.onclick = function () {
+        unequipItem("weapon");
+    };
 
-            unequipItem(
-                "weapon"
-            );
+    armorSlot.onclick = function () {
+        unequipItem("armor");
+    };
 
-        };
-
-
-    armorSlot.onclick =
-        function() {
-
-            unequipItem(
-                "armor"
-            );
-
-        };
-
-
-    bootsSlot.onclick =
-        function() {
-
-            unequipItem(
-                "boots"
-            );
-
-        };
-
+    bootsSlot.onclick = function () {
+        unequipItem("boots");
+    };
 }
 
 
 // ============================================================
-// ITEM DESCRIPTION
+// DESCRIPTION
 // ============================================================
 
-function showItemDescription(
-    item
-) {
+function showItemDescription(item) {
 
     const box =
         document.getElementById(
@@ -753,43 +606,27 @@ function showItemDescription(
     let extra = "";
 
 
-    if (
-        item.damage
-    ) {
-
+    if (item.damage) {
         extra +=
             `<br>⚔️ Damage: +${item.damage}`;
-
     }
 
 
-    if (
-        item.maxHp
-    ) {
-
+    if (item.maxHp) {
         extra +=
             `<br>❤️ Max HP: +${item.maxHp}`;
-
     }
 
 
-    if (
-        item.speed
-    ) {
-
+    if (item.speed) {
         extra +=
             `<br>💨 Speed: +${item.speed}`;
-
     }
 
 
-    if (
-        item.heal
-    ) {
-
+    if (item.heal) {
         extra +=
             `<br>❤️ Heal: ${item.heal}`;
-
     }
 
 
@@ -813,34 +650,32 @@ function showItemDescription(
         </small>
 
     `;
-
 }
 
 
 // ============================================================
-// TOGGLE INVENTORY
+// INVENTORY TOGGLE
 // ============================================================
 
 function toggleInventory() {
 
-    const window =
+    const windowElement =
         document.getElementById(
             "inventory-window"
         );
 
 
-    window.classList.toggle(
+    windowElement.classList.toggle(
         "hidden"
     );
 
 
     renderInventory();
-
 }
 
 
 // ============================================================
-// INITIAL ITEMS
+// INITIALIZE
 // ============================================================
 
 function initializeInventory() {
@@ -851,9 +686,7 @@ function initializeInventory() {
         i++
     ) {
 
-        inventory[i] =
-            null;
-
+        inventory[i] = null;
     }
 
 
@@ -867,7 +700,6 @@ function initializeInventory() {
         "goblinEar",
         2
     );
-
 }
 
 
@@ -877,7 +709,7 @@ function initializeInventory() {
 
 window.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         if (
             event.key.toLowerCase() ===
@@ -885,7 +717,6 @@ window.addEventListener(
         ) {
 
             toggleInventory();
-
         }
 
     }
