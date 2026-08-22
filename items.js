@@ -1,13 +1,8 @@
 // ============================================================
-// ITEMS.JS
-// Shadow Knight - Item Database
+// ITEMS DATABASE
 // ============================================================
 
 const ITEMS = {
-
-    // ========================================================
-    // POTIONS
-    // ========================================================
 
     healthPotion: {
 
@@ -19,7 +14,7 @@ const ITEMS = {
 
         icon: "🧪",
 
-        description: "Hồi 50 HP",
+        description: "Hồi 50 HP.",
 
         heal: 50,
 
@@ -27,10 +22,6 @@ const ITEMS = {
 
     },
 
-
-    // ========================================================
-    // WEAPONS
-    // ========================================================
 
     woodenSword: {
 
@@ -42,7 +33,7 @@ const ITEMS = {
 
         icon: "🗡️",
 
-        description: "Một thanh kiếm gỗ cơ bản.",
+        description: "Thanh kiếm gỗ cơ bản.",
 
         damage: 0,
 
@@ -61,7 +52,7 @@ const ITEMS = {
 
         icon: "⚔️",
 
-        description: "Kiếm sắt mạnh hơn kiếm gỗ.",
+        description: "Một thanh kiếm sắt mạnh.",
 
         damage: 15,
 
@@ -88,10 +79,6 @@ const ITEMS = {
 
     },
 
-
-    // ========================================================
-    // ARMOR
-    // ========================================================
 
     clothArmor: {
 
@@ -131,10 +118,6 @@ const ITEMS = {
     },
 
 
-    // ========================================================
-    // BOOTS
-    // ========================================================
-
     oldBoots: {
 
         id: "oldBoots",
@@ -164,7 +147,7 @@ const ITEMS = {
 
         icon: "🥾",
 
-        description: "Giày giúp người chơi di chuyển nhanh hơn.",
+        description: "Tăng tốc độ di chuyển.",
 
         speed: 1,
 
@@ -172,10 +155,6 @@ const ITEMS = {
 
     },
 
-
-    // ========================================================
-    // MATERIALS
-    // ========================================================
 
     goblinEar: {
 
@@ -187,7 +166,7 @@ const ITEMS = {
 
         icon: "👂",
 
-        description: "Một chiếc tai của Goblin.",
+        description: "Một chiếc tai Goblin.",
 
         value: 10,
 
@@ -206,7 +185,7 @@ const ITEMS = {
 
         icon: "❤️",
 
-        description: "Trái tim của một con Demon.",
+        description: "Trái tim của Demon.",
 
         value: 75,
 
@@ -225,7 +204,7 @@ const ITEMS = {
 
         icon: "💎",
 
-        description: "Một tinh thể chứa năng lượng bóng tối.",
+        description: "Tinh thể chứa năng lượng bóng tối.",
 
         value: 250,
 
@@ -236,96 +215,8 @@ const ITEMS = {
 };
 
 
-// ============================================================
-// GET ITEM
-// ============================================================
-
 function getItem(itemId) {
 
     return ITEMS[itemId] || null;
-
-}
-
-
-// ============================================================
-// GET RANDOM DROP
-// ============================================================
-
-function getRandomDrop(enemyType) {
-
-    const random =
-        Math.random();
-
-
-    // Goblin
-
-    if (
-        enemyType === "Goblin"
-    ) {
-
-        if (random < 0.15) {
-
-            return "healthPotion";
-
-        }
-
-        if (random < 0.25) {
-
-            return "goblinEar";
-
-        }
-
-    }
-
-
-    // Orc
-
-    if (
-        enemyType === "Orc"
-    ) {
-
-        if (random < 0.15) {
-
-            return "healthPotion";
-
-        }
-
-        if (random < 0.25) {
-
-            return "ironSword";
-
-        }
-
-    }
-
-
-    // Demon
-
-    if (
-        enemyType === "Demon"
-    ) {
-
-        if (random < 0.15) {
-
-            return "healthPotion";
-
-        }
-
-        if (random < 0.25) {
-
-            return "demonHeart";
-
-        }
-
-        if (random < 0.28) {
-
-            return "swiftBoots";
-
-        }
-
-    }
-
-
-    return null;
 
 }
