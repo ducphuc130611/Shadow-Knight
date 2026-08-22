@@ -1,6 +1,6 @@
 // ============================================================
 // SHADOW KNIGHT
-// STEP 6
+// STEP 7
 // ============================================================
 
 
@@ -27,7 +27,6 @@ function resizeCanvas() {
 
     canvas.height =
         window.innerHeight;
-
 }
 
 
@@ -127,6 +126,25 @@ const camera = {
 
 
 // ============================================================
+// NPC
+// ============================================================
+
+const elder = {
+
+    x: 400,
+
+    y: 300,
+
+    width: 40,
+
+    height: 50,
+
+    name: "Elder"
+
+};
+
+
+// ============================================================
 // INPUT
 // ============================================================
 
@@ -135,7 +153,7 @@ const keys = {};
 
 window.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         const key =
             event.key.toLowerCase();
@@ -145,37 +163,29 @@ window.addEventListener(
             true;
 
 
-        if (
-            key === " "
-        ) {
+        if (key === " ") {
 
             attack();
 
             event.preventDefault();
-
         }
 
 
-        if (
-            key === "q"
-        ) {
+        if (key === "q") {
 
             usePotionFromInventory();
-
         }
-
     }
 );
 
 
 window.addEventListener(
     "keyup",
-    function(event) {
+    function (event) {
 
         keys[
             event.key.toLowerCase()
         ] = false;
-
     }
 );
 
@@ -188,57 +198,37 @@ const obstacles = [
 
     {
         x: 500,
-
         y: 400,
-
         width: 200,
-
         height: 100
-
     },
 
     {
         x: 1000,
-
         y: 700,
-
         width: 250,
-
         height: 100
-
     },
 
     {
         x: 1500,
-
         y: 300,
-
         width: 150,
-
         height: 250
-
     },
 
     {
         x: 2000,
-
         y: 1000,
-
         width: 300,
-
         height: 100
-
     },
 
     {
         x: 700,
-
         y: 1400,
-
         width: 100,
-
         height: 300
-
     }
 
 ];
@@ -251,98 +241,39 @@ const obstacles = [
 const enemyTypes = [
 
     {
-
-        name:
-            "Goblin",
-
-        width:
-            32,
-
-        height:
-            32,
-
-        hp:
-            50,
-
-        damage:
-            8,
-
-        speed:
-            1.6,
-
-        xp:
-            30,
-
-        gold:
-            8,
-
-        color:
-            "#4caf50"
-
+        name: "Goblin",
+        width: 32,
+        height: 32,
+        hp: 50,
+        damage: 8,
+        speed: 1.6,
+        xp: 30,
+        gold: 8,
+        color: "#4caf50"
     },
 
-
     {
-
-        name:
-            "Orc",
-
-        width:
-            42,
-
-        height:
-            42,
-
-        hp:
-            120,
-
-        damage:
-            15,
-
-        speed:
-            0.8,
-
-        xp:
-            70,
-
-        gold:
-            20,
-
-        color:
-            "#795548"
-
+        name: "Orc",
+        width: 42,
+        height: 42,
+        hp: 120,
+        damage: 15,
+        speed: 0.8,
+        xp: 70,
+        gold: 20,
+        color: "#795548"
     },
 
-
     {
-
-        name:
-            "Demon",
-
-        width:
-            38,
-
-        height:
-            38,
-
-        hp:
-            180,
-
-        damage:
-            22,
-
-        speed:
-            1.1,
-
-        xp:
-            120,
-
-        gold:
-            35,
-
-        color:
-            "#9c27b0"
-
+        name: "Demon",
+        width: 38,
+        height: 38,
+        hp: 180,
+        damage: 22,
+        speed: 1.1,
+        xp: 120,
+        gold: 35,
+        color: "#9c27b0"
     }
 
 ];
@@ -365,56 +296,39 @@ let enemyId =
 
 const boss = {
 
-    active:
-        true,
+    active: true,
 
-    alive:
-        true,
+    alive: true,
 
-    name:
-        "Shadow Lord",
+    name: "Shadow Lord",
 
-    x:
-        2300,
+    x: 2300,
 
-    y:
-        1500,
+    y: 1500,
 
-    width:
-        100,
+    width: 100,
 
-    height:
-        100,
+    height: 100,
 
-    hp:
-        1000,
+    hp: 1000,
 
-    maxHp:
-        1000,
+    maxHp: 1000,
 
-    damage:
-        30,
+    damage: 30,
 
-    speed:
-        0.65,
+    speed: 0.65,
 
-    phase:
-        1,
+    phase: 1,
 
-    lastAttack:
-        0,
+    lastAttack: 0,
 
-    attackCooldown:
-        1500,
+    attackCooldown: 1500,
 
-    lastSkill:
-        0,
+    lastSkill: 0,
 
-    skillCooldown:
-        4000,
+    skillCooldown: 4000,
 
-    hitFlash:
-        0
+    hitFlash: 0
 
 };
 
@@ -442,7 +356,6 @@ function random(
     return Math.random() *
         (max - min) +
         min;
-
 }
 
 
@@ -452,20 +365,15 @@ function distanceBetween(
 ) {
 
     const dx =
-        a.x -
-        b.x;
-
+        a.x - b.x;
 
     const dy =
-        a.y -
-        b.y;
-
+        a.y - b.y;
 
     return Math.sqrt(
         dx * dx +
         dy * dy
     );
-
 }
 
 
@@ -481,23 +389,17 @@ function isColliding(
     return (
 
         a.x <
-        b.x +
-        b.width &&
+        b.x + b.width &&
 
-        a.x +
-        a.width >
+        a.x + a.width >
         b.x &&
 
         a.y <
-        b.y +
-        b.height &&
+        b.y + b.height &&
 
-        a.y +
-        a.height >
+        a.y + a.height >
         b.y
-
     );
-
 }
 
 
@@ -508,18 +410,15 @@ function canMoveTo(
 
     const rect = {
 
-        x:
-            x,
+        x: x,
 
-        y:
-            y,
+        y: y,
 
         width:
             player.width,
 
         height:
             player.height
-
     };
 
 
@@ -536,14 +435,11 @@ function canMoveTo(
         ) {
 
             return false;
-
         }
-
     }
 
 
     return true;
-
 }
 
 
@@ -574,24 +470,21 @@ function updatePlayerStats() {
     player.damage =
         player.baseDamage +
         (
-            weapon.damage ||
-            0
+            weapon.damage || 0
         );
 
 
     player.maxHp =
         100 +
         (
-            armor.maxHp ||
-            0
+            armor.maxHp || 0
         );
 
 
     player.speed =
         4 +
         (
-            boots.speed ||
-            0
+            boots.speed || 0
         );
 
 
@@ -602,9 +495,7 @@ function updatePlayerStats() {
 
         player.hp =
             player.maxHp;
-
     }
-
 }
 
 
@@ -629,7 +520,6 @@ function updatePlayer() {
 
         player.direction =
             "up";
-
     }
 
 
@@ -643,7 +533,6 @@ function updatePlayer() {
 
         player.direction =
             "down";
-
     }
 
 
@@ -657,7 +546,6 @@ function updatePlayer() {
 
         player.direction =
             "left";
-
     }
 
 
@@ -671,7 +559,6 @@ function updatePlayer() {
 
         player.direction =
             "right";
-
     }
 
 
@@ -680,12 +567,9 @@ function updatePlayer() {
         dy !== 0
     ) {
 
-        dx *=
-            0.7071;
+        dx *= 0.7071;
 
-        dy *=
-            0.7071;
-
+        dy *= 0.7071;
     }
 
 
@@ -696,9 +580,7 @@ function updatePlayer() {
         )
     ) {
 
-        player.x +=
-            dx;
-
+        player.x += dx;
     }
 
 
@@ -709,20 +591,16 @@ function updatePlayer() {
         )
     ) {
 
-        player.y +=
-            dy;
-
+        player.y += dy;
     }
 
 
     player.x =
         Math.max(
             0,
-
             Math.min(
                 WORLD_WIDTH -
                 player.width,
-
                 player.x
             )
         );
@@ -731,15 +609,12 @@ function updatePlayer() {
     player.y =
         Math.max(
             0,
-
             Math.min(
                 WORLD_HEIGHT -
                 player.height,
-
                 player.y
             )
         );
-
 }
 
 
@@ -773,16 +648,13 @@ function usePotionFromInventory() {
             );
 
             return;
-
         }
-
     }
 
 
     showMessage(
         "🧪 Không có Potion!"
     );
-
 }
 
 
@@ -792,24 +664,20 @@ function usePotionFromInventory() {
 
 function getAttackBox() {
 
-    const size =
-        60;
+    const size = 60;
 
 
     const box = {
 
-        x:
-            player.x,
+        x: player.x,
 
-        y:
-            player.y,
+        y: player.y,
 
         width:
             player.width,
 
         height:
             player.height
-
     };
 
 
@@ -819,20 +687,16 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x -
-            14;
+            player.x - 14;
 
         box.y =
-            player.y -
-            size;
+            player.y - size;
 
         box.width =
-            player.width +
-            28;
+            player.width + 28;
 
         box.height =
             size;
-
     }
 
     else if (
@@ -841,20 +705,17 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x -
-            14;
+            player.x - 14;
 
         box.y =
             player.y +
             player.height;
 
         box.width =
-            player.width +
-            28;
+            player.width + 28;
 
         box.height =
             size;
-
     }
 
     else if (
@@ -863,20 +724,16 @@ function getAttackBox() {
     ) {
 
         box.x =
-            player.x -
-            size;
+            player.x - size;
 
         box.y =
-            player.y -
-            14;
+            player.y - 14;
 
         box.width =
             size;
 
         box.height =
-            player.height +
-            28;
-
+            player.height + 28;
     }
 
     else {
@@ -886,21 +743,17 @@ function getAttackBox() {
             player.width;
 
         box.y =
-            player.y -
-            14;
+            player.y - 14;
 
         box.width =
             size;
 
         box.height =
-            player.height +
-            28;
-
+            player.height + 28;
     }
 
 
     return box;
-
 }
 
 
@@ -921,7 +774,6 @@ function attack() {
     ) {
 
         return;
-
     }
 
 
@@ -938,12 +790,8 @@ function attack() {
         of enemies
     ) {
 
-        if (
-            !enemy.alive
-        ) {
-
+        if (!enemy.alive) {
             continue;
-
         }
 
 
@@ -970,18 +818,12 @@ function attack() {
 
 
             if (
-                enemy.hp <=
-                0
+                enemy.hp <= 0
             ) {
 
-                killEnemy(
-                    enemy
-                );
-
+                killEnemy(enemy);
             }
-
         }
-
     }
 
 
@@ -997,9 +839,7 @@ function attack() {
         damageBoss(
             player.damage
         );
-
     }
-
 }
 
 
@@ -1010,6 +850,11 @@ function attack() {
 function killEnemy(
     enemy
 ) {
+
+    if (!enemy.alive) {
+        return;
+    }
+
 
     enemy.alive =
         false;
@@ -1030,8 +875,6 @@ function killEnemy(
     );
 
 
-    // Item drop
-
     createEnemyDrop(
         enemy.type,
         enemy.x,
@@ -1039,11 +882,30 @@ function killEnemy(
     );
 
 
+    /*
+     * QUEST:
+     * Chỉ Goblin mới tăng kill counter.
+     */
+
+    if (
+        enemy.type ===
+        "Goblin"
+    ) {
+
+        questState.goblinHunt.kills++;
+
+        checkQuestProgress();
+    }
+
+
     checkLevelUp();
 
 
+    updateQuestUI();
+
+
     setTimeout(
-        function() {
+        function () {
 
             const index =
                 enemies.indexOf(
@@ -1051,15 +913,12 @@ function killEnemy(
                 );
 
 
-            if (
-                index !== -1
-            ) {
+            if (index !== -1) {
 
                 enemies.splice(
                     index,
                     1
                 );
-
             }
 
 
@@ -1068,9 +927,7 @@ function killEnemy(
         },
 
         3000
-
     );
-
 }
 
 
@@ -1094,8 +951,7 @@ function checkLevelUp() {
 
         player.maxXp =
             Math.floor(
-                player.maxXp *
-                1.5
+                player.maxXp * 1.5
             );
 
 
@@ -1110,9 +966,7 @@ function checkLevelUp() {
         showMessage(
             `⭐ LEVEL UP! Level ${player.level}`
         );
-
     }
-
 }
 
 
@@ -1124,12 +978,8 @@ function damageBoss(
     amount
 ) {
 
-    if (
-        !boss.alive
-    ) {
-
+    if (!boss.alive) {
         return;
-
     }
 
 
@@ -1150,20 +1000,21 @@ function damageBoss(
 
     if (
         boss.hp <=
-        boss.maxHp *
-        0.5
-        &&
+        boss.maxHp * 0.5 &&
         boss.phase === 1
     ) {
 
         boss.phase =
             2;
 
+
         boss.speed =
             1.1;
 
+
         boss.damage =
             45;
+
 
         boss.attackCooldown =
             1000;
@@ -1172,27 +1023,26 @@ function damageBoss(
         showMessage(
             "🔥 SHADOW LORD PHASE 2!"
         );
-
     }
 
 
     if (
-        boss.hp <=
-        0
+        boss.hp <= 0
     ) {
 
-        boss.hp =
-            0;
-
+        boss.hp = 0;
 
         bossDeath();
-
     }
-
 }
 
 
 function bossDeath() {
+
+    if (!boss.alive) {
+        return;
+    }
+
 
     boss.alive =
         false;
@@ -1203,6 +1053,7 @@ function bossDeath() {
 
     player.xp +=
         500;
+
 
     player.gold +=
         500;
@@ -1230,8 +1081,7 @@ function bossDeath() {
 
 
     showMessage(
-        "👑 SHADOW LORD DEFEATED! " +
-        "💎 Đồ huyền thoại đã rơi!"
+        "👑 SHADOW LORD DEFEATED!"
     );
 
 
@@ -1242,7 +1092,6 @@ function bossDeath() {
         respawnBoss,
         15000
     );
-
 }
 
 
@@ -1277,7 +1126,6 @@ function respawnBoss() {
             1200,
             1800
         );
-
 }
 
 
@@ -1293,7 +1141,6 @@ function spawnEnemy() {
     ) {
 
         return;
-
     }
 
 
@@ -1310,8 +1157,7 @@ function spawnEnemy() {
 
     let y;
 
-    let attempts =
-        0;
+    let attempts = 0;
 
 
     do {
@@ -1319,16 +1165,14 @@ function spawnEnemy() {
         x =
             random(
                 100,
-                WORLD_WIDTH -
-                100
+                WORLD_WIDTH - 100
             );
 
 
         y =
             random(
                 100,
-                WORLD_HEIGHT -
-                100
+                WORLD_HEIGHT - 100
             );
 
 
@@ -1337,7 +1181,6 @@ function spawnEnemy() {
     }
 
     while (
-
         distanceBetween(
             {
                 x: x,
@@ -1345,11 +1188,8 @@ function spawnEnemy() {
             },
             player
         ) < 500
-
         &&
-
         attempts < 100
-
     );
 
 
@@ -1407,7 +1247,6 @@ function spawnEnemy() {
             0
 
     });
-
 }
 
 
@@ -1418,7 +1257,6 @@ for (
 ) {
 
     spawnEnemy();
-
 }
 
 
@@ -1433,23 +1271,17 @@ function updateEnemies() {
         of enemies
     ) {
 
-        if (
-            !enemy.alive
-        ) {
-
+        if (!enemy.alive) {
             continue;
-
         }
 
 
         if (
-            enemy.hitFlash >
-            0
+            enemy.hitFlash > 0
         ) {
 
             enemy.hitFlash -=
                 16;
-
         }
 
 
@@ -1485,7 +1317,6 @@ function updateEnemies() {
                 dy /
                 distance *
                 enemy.speed;
-
         }
 
 
@@ -1510,13 +1341,9 @@ function updateEnemies() {
                 damagePlayer(
                     enemy.damage
                 );
-
             }
-
         }
-
     }
-
 }
 
 
@@ -1532,18 +1359,15 @@ function updateBoss() {
     ) {
 
         return;
-
     }
 
 
     if (
-        boss.hitFlash >
-        0
+        boss.hitFlash > 0
     ) {
 
         boss.hitFlash -=
             16;
-
     }
 
 
@@ -1579,7 +1403,6 @@ function updateBoss() {
             dy /
             distance *
             boss.speed;
-
     }
 
 
@@ -1604,9 +1427,7 @@ function updateBoss() {
             damagePlayer(
                 boss.damage
             );
-
         }
-
     }
 
 
@@ -1625,9 +1446,7 @@ function updateBoss() {
 
 
         createBossProjectile();
-
     }
-
 }
 
 
@@ -1654,12 +1473,8 @@ function createBossProjectile() {
         );
 
 
-    if (
-        distance === 0
-    ) {
-
+    if (distance === 0) {
         return;
-
     }
 
 
@@ -1675,27 +1490,23 @@ function createBossProjectile() {
 
         vx:
             dx /
-            distance *
-            5,
+            distance * 5,
 
         vy:
             dy /
-            distance *
-            5,
+            distance * 5,
 
         radius:
             10,
 
         damage:
             boss.phase === 1
-                ? 20
-                : 30,
+            ? 20
+            : 30,
 
         life:
             3000
-
     });
-
 }
 
 
@@ -1737,13 +1548,10 @@ function updateBossProjectiles() {
                 projectile.radius,
 
             width:
-                projectile.radius *
-                2,
+                projectile.radius * 2,
 
             height:
-                projectile.radius *
-                2
-
+                projectile.radius * 2
         };
 
 
@@ -1766,24 +1574,19 @@ function updateBossProjectiles() {
 
 
             continue;
-
         }
 
 
         if (
-            projectile.life <=
-            0
+            projectile.life <= 0
         ) {
 
             bossProjectiles.splice(
                 i,
                 1
             );
-
         }
-
     }
-
 }
 
 
@@ -1791,8 +1594,7 @@ function updateBossProjectiles() {
 // PLAYER DAMAGE
 // ============================================================
 
-let lastPlayerDamage =
-    0;
+let lastPlayerDamage = 0;
 
 
 function damagePlayer(
@@ -1810,7 +1612,6 @@ function damagePlayer(
     ) {
 
         return;
-
     }
 
 
@@ -1826,9 +1627,7 @@ function damagePlayer(
         player.hp < 0
     ) {
 
-        player.hp =
-            0;
-
+        player.hp = 0;
     }
 
 
@@ -1841,14 +1640,11 @@ function damagePlayer(
 
 
     if (
-        player.hp <=
-        0
+        player.hp <= 0
     ) {
 
         playerDeath();
-
     }
-
 }
 
 
@@ -1860,7 +1656,7 @@ function playerDeath() {
 
 
     setTimeout(
-        function() {
+        function () {
 
             location.reload();
 
@@ -1868,7 +1664,6 @@ function playerDeath() {
 
         1500
     );
-
 }
 
 
@@ -1893,7 +1688,6 @@ function buyItem(
 
         swiftBoots:
             175
-
     };
 
 
@@ -1911,7 +1705,6 @@ function buyItem(
         );
 
         return;
-
     }
 
 
@@ -1923,7 +1716,6 @@ function buyItem(
     ) {
 
         return;
-
     }
 
 
@@ -1935,15 +1727,12 @@ function buyItem(
 
 
     const item =
-        getItem(
-            itemId
-        );
+        getItem(itemId);
 
 
     showMessage(
         `🛒 Mua ${item.icon} ${item.name}`
     );
-
 }
 
 
@@ -1974,9 +1763,7 @@ function createDamageNumber(
 
         isPlayer:
             isPlayer
-
     });
-
 }
 
 
@@ -1995,28 +1782,22 @@ function updateDamageNumbers() {
             damageNumbers[i];
 
 
-        number.y -=
-            0.5;
+        number.y -= 0.5;
 
 
-        number.life -=
-            16;
+        number.life -= 16;
 
 
         if (
-            number.life <=
-            0
+            number.life <= 0
         ) {
 
             damageNumbers.splice(
                 i,
                 1
             );
-
         }
-
     }
-
 }
 
 
@@ -2036,14 +1817,13 @@ function drawDamageNumbers() {
     ) {
 
         ctx.globalAlpha =
-            number.life /
-            1000;
+            number.life / 1000;
 
 
         ctx.fillStyle =
             number.isPlayer
-                ? "#ff5555"
-                : "#ffff00";
+            ? "#ff5555"
+            : "#ffff00";
 
 
         ctx.fillText(
@@ -2056,20 +1836,16 @@ function drawDamageNumbers() {
 
             number.y -
             camera.y
-
         );
-
     }
 
 
-    ctx.globalAlpha =
-        1;
-
+    ctx.globalAlpha = 1;
 }
 
 
 // ============================================================
-// DEATH EFFECTS
+// DEATH EFFECT
 // ============================================================
 
 function createDeathEffect(
@@ -2094,9 +1870,7 @@ function createDeathEffect(
 
         color:
             color
-
     });
-
 }
 
 
@@ -2115,28 +1889,22 @@ function updateDeathEffects() {
             deathEffects[i];
 
 
-        effect.radius +=
-            2;
+        effect.radius += 2;
 
 
-        effect.life -=
-            16;
+        effect.life -= 16;
 
 
         if (
-            effect.life <=
-            0
+            effect.life <= 0
         ) {
 
             deathEffects.splice(
                 i,
                 1
             );
-
         }
-
     }
-
 }
 
 
@@ -2148,16 +1916,14 @@ function drawDeathEffects() {
     ) {
 
         ctx.globalAlpha =
-            effect.life /
-            700;
+            effect.life / 700;
 
 
         ctx.strokeStyle =
             effect.color;
 
 
-        ctx.lineWidth =
-            5;
+        ctx.lineWidth = 5;
 
 
         ctx.beginPath();
@@ -2176,18 +1942,14 @@ function drawDeathEffects() {
             0,
 
             Math.PI * 2
-
         );
 
 
         ctx.stroke();
-
     }
 
 
-    ctx.globalAlpha =
-        1;
-
+    ctx.globalAlpha = 1;
 }
 
 
@@ -2220,9 +1982,7 @@ function updateCamera() {
                 canvas.width,
 
                 camera.x
-
             )
-
         );
 
 
@@ -2237,11 +1997,8 @@ function updateCamera() {
                 canvas.height,
 
                 camera.y
-
             )
-
         );
-
 }
 
 
@@ -2258,13 +2015,9 @@ function drawWorld() {
     ctx.fillRect(
 
         0,
-
         0,
-
         canvas.width,
-
         canvas.height
-
     );
 
 
@@ -2289,84 +2042,61 @@ function drawWorld() {
 
 
     for (
-        let x =
-            startX;
+        let x = startX;
 
         x <
-            camera.x +
-            canvas.width;
+        camera.x +
+        canvas.width;
 
-        x +=
-            TILE_SIZE
+        x += TILE_SIZE
     ) {
 
         ctx.beginPath();
 
 
         ctx.moveTo(
-
-            x -
-            camera.x,
-
+            x - camera.x,
             0
-
         );
 
 
         ctx.lineTo(
-
-            x -
-            camera.x,
-
+            x - camera.x,
             canvas.height
-
         );
 
 
         ctx.stroke();
-
     }
 
 
     for (
-        let y =
-            startY;
+        let y = startY;
 
         y <
-            camera.y +
-            canvas.height;
+        camera.y +
+        canvas.height;
 
-        y +=
-            TILE_SIZE
+        y += TILE_SIZE
     ) {
 
         ctx.beginPath();
 
 
         ctx.moveTo(
-
             0,
-
-            y -
-            camera.y
-
+            y - camera.y
         );
 
 
         ctx.lineTo(
-
             canvas.width,
-
-            y -
-            camera.y
-
+            y - camera.y
         );
 
 
         ctx.stroke();
-
     }
-
 }
 
 
@@ -2396,7 +2126,6 @@ function drawObstacles() {
             obstacle.width,
 
             obstacle.height
-
         );
 
 
@@ -2404,8 +2133,7 @@ function drawObstacles() {
             "#1b3218";
 
 
-        ctx.lineWidth =
-            4;
+        ctx.lineWidth = 4;
 
 
         ctx.strokeRect(
@@ -2419,11 +2147,200 @@ function drawObstacles() {
             obstacle.width,
 
             obstacle.height
-
         );
+    }
+}
 
+
+// ============================================================
+// DRAW ELDER
+// ============================================================
+
+function drawElder() {
+
+    const screenX =
+        elder.x -
+        camera.x;
+
+
+    const screenY =
+        elder.y -
+        camera.y;
+
+
+    // Body
+
+    ctx.fillStyle =
+        "#795548";
+
+
+    ctx.fillRect(
+
+        screenX,
+
+        screenY + 15,
+
+        elder.width,
+
+        elder.height - 15
+    );
+
+
+    // Head
+
+    ctx.fillStyle =
+        "#f1c27d";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        screenX + 20,
+
+        screenY + 12,
+
+        15,
+
+        0,
+
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+
+    // Beard
+
+    ctx.fillStyle =
+        "#eeeeee";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        screenX + 20,
+
+        screenY + 18,
+
+        10,
+
+        0,
+
+        Math.PI
+    );
+
+
+    ctx.fill();
+
+
+    // Name
+
+    ctx.font =
+        "bold 14px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.fillText(
+
+        "Elder",
+
+        screenX + 20,
+
+        screenY - 12
+    );
+
+
+    const state =
+        questState.goblinHunt;
+
+
+    // !
+
+    if (!state.accepted) {
+
+        ctx.fillStyle =
+            "#ffd700";
+
+
+        ctx.font =
+            "bold 25px Arial";
+
+
+        ctx.fillText(
+
+            "!",
+
+            screenX + 20,
+
+            screenY - 28
+        );
     }
 
+
+    // ?
+
+    else if (
+        state.completed &&
+        !state.claimed
+    ) {
+
+        ctx.fillStyle =
+            "#00ff66";
+
+
+        ctx.font =
+            "bold 25px Arial";
+
+
+        ctx.fillText(
+
+            "?",
+
+            screenX + 20,
+
+            screenY - 28
+        );
+    }
+
+
+    // E indicator
+
+    if (
+        distanceBetween(
+            player,
+            elder
+        ) <= 100
+    ) {
+
+        ctx.font =
+            "bold 13px Arial";
+
+
+        ctx.fillStyle =
+            "#ffffff";
+
+
+        ctx.fillText(
+
+            "[E] Nói chuyện",
+
+            screenX + 20,
+
+            screenY + 65
+        );
+    }
 }
 
 
@@ -2438,12 +2355,8 @@ function drawEnemies() {
         of enemies
     ) {
 
-        if (
-            !enemy.alive
-        ) {
-
+        if (!enemy.alive) {
             continue;
-
         }
 
 
@@ -2459,8 +2372,8 @@ function drawEnemies() {
 
         ctx.fillStyle =
             enemy.hitFlash > 0
-                ? "#ffffff"
-                : enemy.color;
+            ? "#ffffff"
+            : enemy.color;
 
 
         ctx.fillRect(
@@ -2472,7 +2385,6 @@ function drawEnemies() {
             enemy.width,
 
             enemy.height
-
         );
 
 
@@ -2489,7 +2401,6 @@ function drawEnemies() {
             6,
 
             6
-
         );
 
 
@@ -2504,9 +2415,10 @@ function drawEnemies() {
             6,
 
             6
-
         );
 
+
+        // HP background
 
         ctx.fillStyle =
             "#222";
@@ -2521,9 +2433,10 @@ function drawEnemies() {
             enemy.width,
 
             5
-
         );
 
+
+        // HP
 
         ctx.fillStyle =
             "#e53935";
@@ -2542,7 +2455,6 @@ function drawEnemies() {
             ),
 
             5
-
         );
 
 
@@ -2566,11 +2478,8 @@ function drawEnemies() {
             enemy.width / 2,
 
             screenY - 15
-
         );
-
     }
-
 }
 
 
@@ -2586,7 +2495,6 @@ function drawBoss() {
     ) {
 
         return;
-
     }
 
 
@@ -2602,14 +2510,10 @@ function drawBoss() {
 
     ctx.fillStyle =
         boss.hitFlash > 0
-
-            ? "#ffffff"
-
-            : boss.phase === 2
-
-            ? "#ff1744"
-
-            : "#6a1b9a";
+        ? "#ffffff"
+        : boss.phase === 2
+        ? "#ff1744"
+        : "#6a1b9a";
 
 
     ctx.fillRect(
@@ -2621,9 +2525,10 @@ function drawBoss() {
         boss.width,
 
         boss.height
-
     );
 
+
+    // Horns
 
     ctx.fillStyle =
         "#eeeeee";
@@ -2677,6 +2582,8 @@ function drawBoss() {
     ctx.fill();
 
 
+    // Eyes
+
     ctx.fillStyle =
         "#ffeb3b";
 
@@ -2690,7 +2597,6 @@ function drawBoss() {
         15,
 
         10
-
     );
 
 
@@ -2703,7 +2609,6 @@ function drawBoss() {
         15,
 
         10
-
     );
 
 
@@ -2711,8 +2616,7 @@ function drawBoss() {
         "#111";
 
 
-    ctx.lineWidth =
-        4;
+    ctx.lineWidth = 4;
 
 
     ctx.strokeRect(
@@ -2724,9 +2628,7 @@ function drawBoss() {
         boss.width,
 
         boss.height
-
     );
-
 }
 
 
@@ -2761,14 +2663,11 @@ function drawBossProjectiles() {
             0,
 
             Math.PI * 2
-
         );
 
 
         ctx.fill();
-
     }
-
 }
 
 
@@ -2784,7 +2683,6 @@ function drawBossHUD() {
     ) {
 
         return;
-
     }
 
 
@@ -2795,8 +2693,7 @@ function drawBossHUD() {
         );
 
 
-    const barHeight =
-        28;
+    const barHeight = 28;
 
 
     const x =
@@ -2804,8 +2701,7 @@ function drawBossHUD() {
         barWidth / 2;
 
 
-    const y =
-        25;
+    const y = 25;
 
 
     ctx.fillStyle =
@@ -2815,20 +2711,16 @@ function drawBossHUD() {
     ctx.fillRect(
 
         x,
-
         y,
-
         barWidth,
-
         barHeight
-
     );
 
 
     ctx.fillStyle =
         boss.phase === 2
-            ? "#ff1744"
-            : "#8e44ad";
+        ? "#ff1744"
+        : "#8e44ad";
 
 
     ctx.fillRect(
@@ -2844,7 +2736,6 @@ function drawBossHUD() {
         ),
 
         barHeight
-
     );
 
 
@@ -2852,20 +2743,15 @@ function drawBossHUD() {
         "#ffffff";
 
 
-    ctx.lineWidth =
-        3;
+    ctx.lineWidth = 3;
 
 
     ctx.strokeRect(
 
         x,
-
         y,
-
         barWidth,
-
         barHeight
-
     );
 
 
@@ -2891,9 +2777,7 @@ function drawBossHUD() {
         canvas.width / 2,
 
         y + 21
-
     );
-
 }
 
 
@@ -2926,7 +2810,6 @@ function drawPlayer() {
         player.width,
 
         player.height
-
     );
 
 
@@ -2943,7 +2826,6 @@ function drawPlayer() {
         20,
 
         10
-
     );
 
 
@@ -2965,9 +2847,7 @@ function drawPlayer() {
             20,
 
             5
-
         );
-
     }
 
     else if (
@@ -2984,9 +2864,7 @@ function drawPlayer() {
             20,
 
             5
-
         );
-
     }
 
     else if (
@@ -3003,9 +2881,7 @@ function drawPlayer() {
             5,
 
             20
-
         );
-
     }
 
     else {
@@ -3019,9 +2895,7 @@ function drawPlayer() {
             5,
 
             20
-
         );
-
     }
 
 
@@ -3029,8 +2903,7 @@ function drawPlayer() {
         "#111";
 
 
-    ctx.lineWidth =
-        2;
+    ctx.lineWidth = 2;
 
 
     ctx.strokeRect(
@@ -3042,9 +2915,7 @@ function drawPlayer() {
         player.width,
 
         player.height
-
     );
-
 }
 
 
@@ -3065,7 +2936,6 @@ function drawAttackEffect() {
     ) {
 
         return;
-
     }
 
 
@@ -3088,9 +2958,7 @@ function drawAttackEffect() {
         box.width,
 
         box.height
-
     );
-
 }
 
 
@@ -3104,15 +2972,13 @@ function updateHUD() {
         (
             player.hp /
             player.maxHp
-        ) *
-        100;
+        ) * 100;
 
 
     document.getElementById(
         "hp-bar"
     ).style.width =
-        hpPercent +
-        "%";
+        hpPercent + "%";
 
 
     document.getElementById(
@@ -3143,7 +3009,6 @@ function updateHUD() {
         "damage-text"
     ).textContent =
         `⚔️ Damage: ${player.damage}`;
-
 }
 
 
@@ -3151,8 +3016,7 @@ function updateHUD() {
 // MESSAGE
 // ============================================================
 
-let messageTimer =
-    null;
+let messageTimer = null;
 
 
 function showMessage(
@@ -3181,7 +3045,7 @@ function showMessage(
 
     messageTimer =
         setTimeout(
-            function() {
+            function () {
 
                 message.classList.remove(
                     "show"
@@ -3191,7 +3055,105 @@ function showMessage(
 
             1800
         );
+}
 
+
+// ============================================================
+// NPC TALK
+// ============================================================
+
+function talkToElder() {
+
+    const distance =
+        distanceBetween(
+            player,
+            elder
+        );
+
+
+    if (
+        distance > 100
+    ) {
+
+        showMessage(
+            "👴 Hãy đến gần Elder hơn."
+        );
+
+        return;
+    }
+
+
+    const state =
+        questState.goblinHunt;
+
+
+    if (!state.accepted) {
+
+        showMessage(
+            "👴 Elder: Goblin đang tàn phá ngôi làng!"
+        );
+
+
+        setTimeout(
+            function () {
+
+                acceptQuest(
+                    "goblinHunt"
+                );
+
+            },
+
+            900
+        );
+
+
+        return;
+    }
+
+
+    if (
+        state.completed &&
+        !state.claimed
+    ) {
+
+        showMessage(
+            "👴 Elder: Tuyệt vời! Ngươi đã làm rất tốt."
+        );
+
+
+        setTimeout(
+            function () {
+
+                claimQuest(
+                    "goblinHunt"
+                );
+
+            },
+
+            900
+        );
+
+
+        return;
+    }
+
+
+    if (
+        state.claimed
+    ) {
+
+        showMessage(
+            "👴 Elder: Cảm ơn ngươi, chiến binh."
+        );
+
+
+        return;
+    }
+
+
+    showMessage(
+        `👴 Elder: Goblin đã bị hạ ${state.kills}/5.`
+    );
 }
 
 
@@ -3200,8 +3162,6 @@ function showMessage(
 // ============================================================
 
 function update() {
-
-    updatePlayerStats();
 
     updatePlayer();
 
@@ -3219,6 +3179,7 @@ function update() {
 
     updateHUD();
 
+    updateQuestUI();
 }
 
 
@@ -3237,13 +3198,14 @@ function draw() {
         canvas.width,
 
         canvas.height
-
     );
 
 
     drawWorld();
 
     drawObstacles();
+
+    drawElder();
 
     drawItemDrops();
 
@@ -3262,7 +3224,6 @@ function draw() {
     drawDamageNumbers();
 
     drawBossHUD();
-
 }
 
 
@@ -3279,19 +3240,22 @@ function gameLoop() {
     requestAnimationFrame(
         gameLoop
     );
-
 }
 
 
 // ============================================================
-// START
+// START GAME
 // ============================================================
 
 initializeInventory();
 
+initializeQuests();
+
 updatePlayerStats();
 
 renderInventory();
+
+updateQuestUI();
 
 updateHUD();
 
