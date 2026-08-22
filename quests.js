@@ -2,6 +2,7 @@
 // QUEST SYSTEM
 // ============================================================
 
+
 const quests = {
 
     goblinHunt: {
@@ -11,11 +12,12 @@ const quests = {
         name: "Goblin Hunt",
 
         description:
-            "Tiêu diệt 5 Goblin và mang 3 Goblin Ear về cho Elder.",
+            "Tiêu diệt 5 Goblin và thu thập 3 Goblin Ear cho Elder.",
 
         requiredKills: 5,
 
-        requiredItem: "goblinEar",
+        requiredItem:
+            "goblinEar",
 
         requiredItemAmount: 3,
 
@@ -23,7 +25,8 @@ const quests = {
 
         rewardGold: 200,
 
-        rewardItem: "healthPotion",
+        rewardItem:
+            "healthPotion",
 
         rewardItemAmount: 2
 
@@ -53,41 +56,40 @@ const questState = {
 // ACCEPT QUEST
 // ============================================================
 
-function acceptQuest(questId) {
+function acceptQuest(
+    questId
+) {
 
     const quest =
         quests[questId];
+
 
     const state =
         questState[questId];
 
 
     if (!quest || !state) {
-
         return;
-
     }
 
 
     if (state.claimed) {
 
         showMessage(
-            "Nhiệm vụ này đã hoàn thành."
+            "📜 Nhiệm vụ này đã hoàn thành."
         );
 
         return;
-
     }
 
 
     if (state.accepted) {
 
         showMessage(
-            "Bạn đã nhận nhiệm vụ này rồi."
+            "📜 Bạn đã nhận nhiệm vụ này rồi."
         );
 
         return;
-
     }
 
 
@@ -101,18 +103,49 @@ function acceptQuest(questId) {
 
 
     updateQuestUI();
-
 }
 
 
 // ============================================================
-// CHECK QUEST
+// ITEM COUNT
+// ============================================================
+
+function getItemAmount(
+    itemId
+) {
+
+    let total = 0;
+
+
+    for (
+        const slot
+        of inventory
+    ) {
+
+        if (
+            slot &&
+            slot.id === itemId
+        ) {
+
+            total +=
+                slot.amount;
+        }
+    }
+
+
+    return total;
+}
+
+
+// ============================================================
+// CHECK PROGRESS
 // ============================================================
 
 function checkQuestProgress() {
 
     const quest =
         quests.goblinHunt;
+
 
     const state =
         questState.goblinHunt;
@@ -124,7 +157,6 @@ function checkQuestProgress() {
     ) {
 
         return;
-
     }
 
 
@@ -149,46 +181,10 @@ function checkQuestProgress() {
         showMessage(
             "✅ Quest hoàn thành! Hãy quay lại Elder."
         );
-
     }
 
 
     updateQuestUI();
-
-}
-
-
-// ============================================================
-// GET ITEM AMOUNT
-// ============================================================
-
-function getItemAmount(
-    itemId
-) {
-
-    let total = 0;
-
-
-    for (
-        const slot
-        of inventory
-    ) {
-
-        if (
-            slot &&
-            slot.id === itemId
-        ) {
-
-            total +=
-                slot.amount;
-
-        }
-
-    }
-
-
-    return total;
-
 }
 
 
@@ -203,14 +199,13 @@ function claimQuest(
     const quest =
         quests[questId];
 
+
     const state =
         questState[questId];
 
 
     if (!quest || !state) {
-
         return;
-
     }
 
 
@@ -221,7 +216,6 @@ function claimQuest(
         );
 
         return;
-
     }
 
 
@@ -232,18 +226,35 @@ function claimQuest(
         );
 
         return;
-
     }
 
 
     if (state.claimed) {
 
         showMessage(
-            "Bạn đã nhận phần thưởng rồi."
+            "Bạn đã nhận phần thưởng."
         );
 
         return;
+    }
 
+
+    /*
+     * Kiểm tra inventory trước
+     * để đảm bảo có chỗ nhận item.
+     */
+
+    if (
+        !canAddQuestReward(
+            quest.rewardItem
+        )
+    ) {
+
+        showMessage(
+            "🎒 Inventory đầy! Hãy bỏ bớt đồ."
+        );
+
+        return;
     }
 
 
@@ -269,12 +280,67 @@ function claimQuest(
 
 
     showMessage(
-        `🎁 Nhận thưởng: +${quest.rewardXP} XP +${quest.rewardGold} Gold`
+        `🎁 +${quest.rewardXP} XP | +${quest.rewardGold} Gold | 🧪 x${quest.rewardItemAmount}`
     );
 
 
     updateQuestUI();
 
+
+    updateHUD();
+}
+
+
+// ============================================================
+// REWARD SPACE CHECK
+// ============================================================
+
+function canAddQuestReward(
+    itemId
+) {
+
+    const item =
+        getItem(itemId);
+
+
+    if (!item) {
+        return false;
+    }
+
+
+    if (
+        item.type === "potion" ||
+        item.type === "material"
+    ) {
+
+        for (
+            const slot
+            of inventory
+        ) {
+
+            if (
+                slot &&
+                slot.id === itemId
+            ) {
+
+                return true;
+            }
+        }
+    }
+
+
+    for (
+        const slot
+        of inventory
+    ) {
+
+        if (!slot) {
+            return true;
+        }
+    }
+
+
+    return false;
 }
 
 
@@ -291,14 +357,13 @@ function updateQuestUI() {
 
 
     if (!panel) {
-
         return;
-
     }
 
 
     const quest =
         quests.goblinHunt;
+
 
     const state =
         questState.goblinHunt;
@@ -314,16 +379,21 @@ function updateQuestUI() {
 
         panel.innerHTML = `
 
-            <h3>📜 ${quest.name}</h3>
+            <h3>
+                📜 ${quest.name}
+            </h3>
 
             <p>
                 ✅ Đã hoàn thành
             </p>
 
+            <p>
+                Elder đã cảm ơn bạn.
+            </p>
+
         `;
 
         return;
-
     }
 
 
@@ -331,10 +401,22 @@ function updateQuestUI() {
 
         panel.innerHTML = `
 
-            <h3>📜 ${quest.name}</h3>
+            <h3>
+                📜 ${quest.name}
+            </h3>
 
             <p>
                 ${quest.description}
+            </p>
+
+            <p>
+                🎁 Phần thưởng:
+                <br>
+                ⭐ ${quest.rewardXP} XP
+                <br>
+                💰 ${quest.rewardGold} Gold
+                <br>
+                🧪 x${quest.rewardItemAmount}
             </p>
 
             <button
@@ -346,56 +428,52 @@ function updateQuestUI() {
         `;
 
         return;
-
     }
 
 
     panel.innerHTML = `
 
-        <h3>📜 ${quest.name}</h3>
+        <h3>
+            📜 ${quest.name}
+        </h3>
 
         <p>
             ${quest.description}
         </p>
 
         <p>
-            Goblin:
-            ${state.kills}
-            /
-            ${quest.requiredKills}
+            ⚔️ Goblin:
+            ${state.kills}/${quest.requiredKills}
         </p>
 
         <p>
-            Goblin Ear:
-            ${earCount}
-            /
-            ${quest.requiredItemAmount}
+            👂 Goblin Ear:
+            ${earCount}/${quest.requiredItemAmount}
         </p>
 
         ${
             state.completed
 
-            ? `
+            ?
 
+            `
                 <button
                     onclick="claimQuest('goblinHunt')"
                 >
                     🎁 Nhận phần thưởng
                 </button>
-
             `
 
-            : `
+            :
 
+            `
                 <p>
-                    ⚔️ Hãy hoàn thành nhiệm vụ!
+                    ⚔️ Hãy tiếp tục nhiệm vụ!
                 </p>
-
             `
         }
 
     `;
-
 }
 
 
