@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shadow Knight</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="game-container">
+
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+
+            <div class="player-info">
+                <div class="name">
+                    ⚔️ Shadow Knight
+                </div>
+
+                <div class="bar-container">
+                    <div id="hp-bar"></div>
+                </div>
+
+                <div class="stats">
+                    <span id="hp-text">HP: 100 / 100</span>
+                    <span id="level-text">Level: 1</span>
+                    <span id="xp-text">XP: 0 / 100</span>
+                    <span id="gold-text">💰 Gold: 0</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <div id="controls">
+            <b>WASD / Arrow Keys</b> - Di chuyển
+        </div>
+
+    </div>
+
+    <script src="game.js"></script>
+
+</body>
+</html>
