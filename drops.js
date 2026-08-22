@@ -20,9 +20,7 @@ function createItemDrop(
 
 
     if (!item) {
-
         return;
-
     }
 
 
@@ -41,12 +39,11 @@ function createItemDrop(
         bob: Math.random() * 10
 
     });
-
 }
 
 
 // ============================================================
-// RANDOM DROP
+// RANDOM ENEMY DROP
 // ============================================================
 
 function createEnemyDrop(
@@ -59,26 +56,21 @@ function createEnemyDrop(
         Math.random();
 
 
-    let itemId =
-        null;
+    let itemId = null;
 
 
     if (
         enemyType === "Goblin"
     ) {
 
-        if (
-            random < 0.15
-        ) {
+        if (random < 0.15) {
 
             itemId =
                 "healthPotion";
 
         }
 
-        else if (
-            random < 0.30
-        ) {
+        else if (random < 0.60) {
 
             itemId =
                 "goblinEar";
@@ -92,18 +84,14 @@ function createEnemyDrop(
         enemyType === "Orc"
     ) {
 
-        if (
-            random < 0.15
-        ) {
+        if (random < 0.15) {
 
             itemId =
                 "healthPotion";
 
         }
 
-        else if (
-            random < 0.25
-        ) {
+        else if (random < 0.25) {
 
             itemId =
                 "ironSword";
@@ -117,27 +105,21 @@ function createEnemyDrop(
         enemyType === "Demon"
     ) {
 
-        if (
-            random < 0.15
-        ) {
+        if (random < 0.15) {
 
             itemId =
                 "healthPotion";
 
         }
 
-        else if (
-            random < 0.30
-        ) {
+        else if (random < 0.30) {
 
             itemId =
                 "demonHeart";
 
         }
 
-        else if (
-            random < 0.35
-        ) {
+        else if (random < 0.35) {
 
             itemId =
                 "swiftBoots";
@@ -154,9 +136,7 @@ function createEnemyDrop(
             x,
             y
         );
-
     }
-
 }
 
 
@@ -165,6 +145,23 @@ function createEnemyDrop(
 // ============================================================
 
 function pickupNearbyItem() {
+
+    /*
+     * Nếu đang đứng gần Elder,
+     * E được dành cho NPC.
+     */
+
+    if (
+        typeof elder !== "undefined" &&
+        distanceBetween(
+            player,
+            elder
+        ) <= 100
+    ) {
+
+        return;
+    }
+
 
     let closest = null;
 
@@ -204,9 +201,7 @@ function pickupNearbyItem() {
 
             closestDistance =
                 distance;
-
         }
-
     }
 
 
@@ -217,7 +212,6 @@ function pickupNearbyItem() {
         );
 
         return;
-
     }
 
 
@@ -245,19 +239,23 @@ function pickupNearbyItem() {
             );
 
 
-        if (
-            index !== -1
-        ) {
+        if (index !== -1) {
 
             droppedItems.splice(
                 index,
                 1
             );
-
         }
 
-    }
 
+        if (
+            typeof checkQuestProgress ===
+            "function"
+        ) {
+
+            checkQuestProgress();
+        }
+    }
 }
 
 
@@ -279,14 +277,11 @@ function drawItemDrops() {
 
 
         if (!item) {
-
             continue;
-
         }
 
 
-        drop.bob +=
-            0.08;
+        drop.bob += 0.08;
 
 
         const offset =
@@ -305,8 +300,6 @@ function drawItemDrops() {
             camera.y +
             offset;
 
-
-        // Glow
 
         ctx.beginPath();
 
@@ -335,8 +328,6 @@ function drawItemDrops() {
         ctx.fill();
 
 
-        // Item
-
         ctx.font =
             "24px Arial";
 
@@ -352,13 +343,10 @@ function drawItemDrops() {
             screenX +
                 drop.width / 2,
 
-            screenY +
-                21
+            screenY + 21
 
         );
 
-
-        // E
 
         const distance =
             distanceBetween(
@@ -386,33 +374,46 @@ function drawItemDrops() {
                 screenX +
                     drop.width / 2,
 
-                screenY -
-                    8
+                screenY - 8
 
             );
-
         }
-
     }
-
 }
 
 
 // ============================================================
-// KEY E
+// E KEY
 // ============================================================
 
 window.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         if (
             event.key.toLowerCase() ===
             "e"
         ) {
 
-            pickupNearbyItem();
+            /*
+             * Elder được ưu tiên.
+             */
 
+            if (
+                typeof elder !== "undefined" &&
+                distanceBetween(
+                    player,
+                    elder
+                ) <= 100
+            ) {
+
+                talkToElder();
+
+                return;
+            }
+
+
+            pickupNearbyItem();
         }
 
     }
