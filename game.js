@@ -1,6 +1,6 @@
 // ============================================================
 // SHADOW KNIGHT
-// STEP 1 - BASIC RPG
+// STEP 2 - COMBAT SYSTEM
 // ============================================================
 
 const canvas = document.getElementById("gameCanvas");
@@ -55,7 +55,15 @@ const player = {
     xp: 0,
     maxXp: 100,
 
-    gold: 0
+    gold: 0,
+
+    damage: 25,
+
+    attackCooldown: 400,
+
+    lastAttack: 0,
+
+    direction: "down"
 
 };
 
@@ -80,9 +88,23 @@ const keys = {};
 
 window.addEventListener("keydown", function(event) {
 
-    keys[event.key.toLowerCase()] = true;
+    const key = event.key.toLowerCase();
+
+    keys[key] = true;
+
+
+    // Attack
+
+    if (key === " ") {
+
+        attack();
+
+        event.preventDefault();
+
+    }
 
 });
+
 
 window.addEventListener("keyup", function(event) {
 
@@ -130,6 +152,91 @@ const obstacles = [
         y: 1400,
         width: 100,
         height: 300
+    }
+
+];
+
+
+// ============================================================
+// ENEMIES
+// ============================================================
+
+const enemies = [
+
+    {
+        x: 700,
+        y: 600,
+
+        width: 36,
+        height: 36,
+
+        hp: 60,
+        maxHp: 60,
+
+        damage: 10,
+
+        speed: 1,
+
+        alive: true,
+
+        color: "#9b3d3d"
+    },
+
+    {
+        x: 1200,
+        y: 500,
+
+        width: 36,
+        height: 36,
+
+        hp: 80,
+        maxHp: 80,
+
+        damage: 12,
+
+        speed: 1,
+
+        alive: true,
+
+        color: "#8f4545"
+    },
+
+    {
+        x: 1700,
+        y: 800,
+
+        width: 36,
+        height: 36,
+
+        hp: 100,
+        maxHp: 100,
+
+        damage: 15,
+
+        speed: 0.8,
+
+        alive: true,
+
+        color: "#753939"
+    },
+
+    {
+        x: 2200,
+        y: 600,
+
+        width: 36,
+        height: 36,
+
+        hp: 120,
+        maxHp: 120,
+
+        damage: 18,
+
+        speed: 0.7,
+
+        alive: true,
+
+        color: "#653333"
     }
 
 ];
@@ -195,41 +302,39 @@ function updatePlayer() {
     let dy = 0;
 
 
-    // WASD
+    if (keys["w"] || keys["arrowup"]) {
 
-    if (keys["w"]) {
         dy -= player.speed;
+
+        player.direction = "up";
+
     }
 
-    if (keys["s"]) {
+
+    if (keys["s"] || keys["arrowdown"]) {
+
         dy += player.speed;
+
+        player.direction = "down";
+
     }
 
-    if (keys["a"]) {
+
+    if (keys["a"] || keys["arrowleft"]) {
+
         dx -= player.speed;
+
+        player.direction = "left";
+
     }
 
-    if (keys["d"]) {
+
+    if (keys["d"] || keys["arrowright"]) {
+
         dx += player.speed;
-    }
 
+        player.direction = "right";
 
-    // Arrow keys
-
-    if (keys["arrowup"]) {
-        dy -= player.speed;
-    }
-
-    if (keys["arrowdown"]) {
-        dy += player.speed;
-    }
-
-    if (keys["arrowleft"]) {
-        dx -= player.speed;
-    }
-
-    if (keys["arrowright"]) {
-        dx += player.speed;
     }
 
 
@@ -243,16 +348,12 @@ function updatePlayer() {
     }
 
 
-    // X collision
-
     if (canMoveTo(player.x + dx, player.y)) {
 
         player.x += dx;
 
     }
 
-
-    // Y collision
 
     if (canMoveTo(player.x, player.y + dy)) {
 
@@ -284,6 +385,321 @@ function updatePlayer() {
 
 
 // ============================================================
+// ATTACK BOX
+// ============================================================
+
+function getAttackBox() {
+
+    const size = 55;
+
+    let box = {
+
+        x: player.x,
+        y: player.y,
+
+        width: player.width,
+        height: player.height
+
+    };
+
+
+    if (player.direction === "up") {
+
+        box.x = player.x - 10;
+        box.y = player.y - size;
+
+        box.width = player.width + 20;
+        box.height = size;
+
+    }
+
+
+    else if (player.direction === "down") {
+
+        box.x = player.x - 10;
+        box.y = player.y + player.height;
+
+        box.width = player.width + 20;
+        box.height = size;
+
+    }
+
+
+    else if (player.direction === "left") {
+
+        box.x = player.x - size;
+        box.y = player.y - 10;
+
+        box.width = size;
+        box.height = player.height + 20;
+
+    }
+
+
+    else if (player.direction === "right") {
+
+        box.x = player.x + player.width;
+        box.y = player.y - 10;
+
+        box.width = size;
+        box.height = player.height + 20;
+
+    }
+
+
+    return box;
+
+}
+
+
+// ============================================================
+// ATTACK
+// ============================================================
+
+function attack() {
+
+    const now = Date.now();
+
+
+    if (
+        now - player.lastAttack <
+        player.attackCooldown
+    ) {
+
+        return;
+
+    }
+
+
+    player.lastAttack = now;
+
+
+    const attackBox = getAttackBox();
+
+
+    for (const enemy of enemies) {
+
+        if (!enemy.alive) {
+            continue;
+        }
+
+
+        if (isColliding(attackBox, enemy)) {
+
+            enemy.hp -= player.damage;
+
+
+            console.log(
+                "Enemy hit! HP:",
+                enemy.hp
+            );
+
+
+            if (enemy.hp <= 0) {
+
+                killEnemy(enemy);
+
+            }
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// KILL ENEMY
+// ============================================================
+
+function killEnemy(enemy) {
+
+    enemy.alive = false;
+
+    const xpReward = 50;
+    const goldReward = 10;
+
+
+    player.xp += xpReward;
+
+    player.gold += goldReward;
+
+
+    console.log(
+        `Enemy defeated! +${xpReward} XP +${goldReward} Gold`
+    );
+
+
+    checkLevelUp();
+
+}
+
+
+// ============================================================
+// LEVEL UP
+// ============================================================
+
+function checkLevelUp() {
+
+    while (player.xp >= player.maxXp) {
+
+        player.xp -= player.maxXp;
+
+        player.level++;
+
+
+        player.maxXp =
+            Math.floor(
+                player.maxXp * 1.5
+            );
+
+
+        player.maxHp += 20;
+
+        player.hp = player.maxHp;
+
+        player.damage += 5;
+
+
+        console.log(
+            `LEVEL UP! Level ${player.level}`
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// ENEMY AI
+// ============================================================
+
+function updateEnemies() {
+
+    for (const enemy of enemies) {
+
+        if (!enemy.alive) {
+            continue;
+        }
+
+
+        const dx =
+            player.x - enemy.x;
+
+        const dy =
+            player.y - enemy.y;
+
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        // Enemy follows player
+
+        if (
+            distance > 45 &&
+            distance < 500
+        ) {
+
+            const moveX =
+                (dx / distance) *
+                enemy.speed;
+
+            const moveY =
+                (dy / distance) *
+                enemy.speed;
+
+
+            enemy.x += moveX;
+            enemy.y += moveY;
+
+        }
+
+
+        // Enemy attacks player
+
+        if (distance < 50) {
+
+            damagePlayer(enemy.damage);
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// PLAYER DAMAGE
+// ============================================================
+
+let lastPlayerDamage = 0;
+
+
+function damagePlayer(amount) {
+
+    const now = Date.now();
+
+
+    // Prevent damage every frame
+
+    if (
+        now - lastPlayerDamage <
+        700
+    ) {
+
+        return;
+
+    }
+
+
+    lastPlayerDamage = now;
+
+
+    player.hp -= amount;
+
+
+    if (player.hp < 0) {
+
+        player.hp = 0;
+
+    }
+
+
+    console.log(
+        `Player damaged: -${amount} HP`
+    );
+
+
+    if (player.hp <= 0) {
+
+        playerDeath();
+
+    }
+
+}
+
+
+// ============================================================
+// PLAYER DEATH
+// ============================================================
+
+function playerDeath() {
+
+    alert(
+        "💀 Bạn đã chết!\n\nGame sẽ được tải lại."
+    );
+
+
+    location.reload();
+
+}
+
+
+// ============================================================
 // CAMERA
 // ============================================================
 
@@ -300,8 +716,6 @@ function updateCamera() {
         player.height / 2 -
         canvas.height / 2;
 
-
-    // Camera boundaries
 
     camera.x = Math.max(
         0,
@@ -339,17 +753,18 @@ function drawWorld() {
     );
 
 
-    // Grid
-
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.05)";
 
 
     const startX =
-        Math.floor(camera.x / TILE_SIZE) * TILE_SIZE;
+        Math.floor(camera.x / TILE_SIZE) *
+        TILE_SIZE;
+
 
     const startY =
-        Math.floor(camera.y / TILE_SIZE) * TILE_SIZE;
+        Math.floor(camera.y / TILE_SIZE) *
+        TILE_SIZE;
 
 
     for (
@@ -417,6 +832,7 @@ function drawObstacles() {
 
         ctx.fillStyle = "#31552b";
 
+
         ctx.fillRect(
             screenX,
             screenY,
@@ -429,11 +845,101 @@ function drawObstacles() {
 
         ctx.lineWidth = 4;
 
+
         ctx.strokeRect(
             screenX,
             screenY,
             obstacle.width,
             obstacle.height
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// DRAW ENEMIES
+// ============================================================
+
+function drawEnemies() {
+
+    for (const enemy of enemies) {
+
+        if (!enemy.alive) {
+            continue;
+        }
+
+
+        const screenX =
+            enemy.x - camera.x;
+
+        const screenY =
+            enemy.y - camera.y;
+
+
+        // Enemy body
+
+        ctx.fillStyle = enemy.color;
+
+
+        ctx.fillRect(
+            screenX,
+            screenY,
+            enemy.width,
+            enemy.height
+        );
+
+
+        // Eyes
+
+        ctx.fillStyle = "#ffffff";
+
+
+        ctx.fillRect(
+            screenX + 7,
+            screenY + 8,
+            6,
+            6
+        );
+
+
+        ctx.fillRect(
+            screenX + 23,
+            screenY + 8,
+            6,
+            6
+        );
+
+
+        // HP bar background
+
+        ctx.fillStyle = "#222";
+
+
+        ctx.fillRect(
+            screenX,
+            screenY - 10,
+            enemy.width,
+            5
+        );
+
+
+        // HP
+
+        ctx.fillStyle = "#e53935";
+
+
+        const hpWidth =
+            enemy.width *
+            (enemy.hp / enemy.maxHp);
+
+
+        ctx.fillRect(
+            screenX,
+            screenY - 10,
+            hpWidth,
+            5
         );
 
     }
@@ -458,6 +964,7 @@ function drawPlayer() {
 
     ctx.fillStyle = "#4b6cff";
 
+
     ctx.fillRect(
         screenX,
         screenY,
@@ -469,6 +976,7 @@ function drawPlayer() {
     // Helmet
 
     ctx.fillStyle = "#bfc7d5";
+
 
     ctx.fillRect(
         screenX + 6,
@@ -482,19 +990,61 @@ function drawPlayer() {
 
     ctx.fillStyle = "#eeeeee";
 
-    ctx.fillRect(
-        screenX + player.width,
-        screenY + 8,
-        18,
-        5
-    );
+
+    if (player.direction === "right") {
+
+        ctx.fillRect(
+            screenX + 32,
+            screenY + 8,
+            20,
+            5
+        );
+
+    }
 
 
-    // Player outline
+    else if (player.direction === "left") {
+
+        ctx.fillRect(
+            screenX - 20,
+            screenY + 8,
+            20,
+            5
+        );
+
+    }
+
+
+    else if (player.direction === "up") {
+
+        ctx.fillRect(
+            screenX + 13,
+            screenY - 25,
+            5,
+            20
+        );
+
+    }
+
+
+    else {
+
+        ctx.fillRect(
+            screenX + 13,
+            screenY + 32,
+            5,
+            20
+        );
+
+    }
+
+
+    // Outline
 
     ctx.strokeStyle = "#111";
 
     ctx.lineWidth = 2;
+
 
     ctx.strokeRect(
         screenX,
@@ -507,7 +1057,44 @@ function drawPlayer() {
 
 
 // ============================================================
-// UPDATE HUD
+// ATTACK EFFECT
+// ============================================================
+
+function drawAttackEffect() {
+
+    const now = Date.now();
+
+
+    if (
+        now - player.lastAttack >
+        150
+    ) {
+
+        return;
+
+    }
+
+
+    const attackBox =
+        getAttackBox();
+
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.35)";
+
+
+    ctx.fillRect(
+        attackBox.x - camera.x,
+        attackBox.y - camera.y,
+        attackBox.width,
+        attackBox.height
+    );
+
+}
+
+
+// ============================================================
+// HUD
 // ============================================================
 
 function updateHUD() {
@@ -516,23 +1103,33 @@ function updateHUD() {
         (player.hp / player.maxHp) * 100;
 
 
-    document.getElementById("hp-bar").style.width =
+    document.getElementById(
+        "hp-bar"
+    ).style.width =
         hpPercent + "%";
 
 
-    document.getElementById("hp-text").textContent =
+    document.getElementById(
+        "hp-text"
+    ).textContent =
         `HP: ${player.hp} / ${player.maxHp}`;
 
 
-    document.getElementById("level-text").textContent =
+    document.getElementById(
+        "level-text"
+    ).textContent =
         `Level: ${player.level}`;
 
 
-    document.getElementById("xp-text").textContent =
+    document.getElementById(
+        "xp-text"
+    ).textContent =
         `XP: ${player.xp} / ${player.maxXp}`;
 
 
-    document.getElementById("gold-text").textContent =
+    document.getElementById(
+        "gold-text"
+    ).textContent =
         `💰 Gold: ${player.gold}`;
 
 }
@@ -545,6 +1142,8 @@ function updateHUD() {
 function update() {
 
     updatePlayer();
+
+    updateEnemies();
 
     updateCamera();
 
@@ -571,7 +1170,11 @@ function draw() {
 
     drawObstacles();
 
+    drawEnemies();
+
     drawPlayer();
+
+    drawAttackEffect();
 
 }
 
