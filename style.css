@@ -24,11 +24,6 @@ body {
     background: #477a3a;
 }
 
-
-/* =========================================================
-   HUD
-========================================================= */
-
 #hud {
     position: absolute;
     top: 20px;
@@ -74,14 +69,37 @@ body {
     font-size: 14px;
 }
 
+#save-controls {
+    position: absolute;
+    top: 190px;
+    left: 20px;
+    display: flex;
+    gap: 6px;
+    z-index: 15;
+}
 
-/* =========================================================
-   INVENTORY BUTTON
-========================================================= */
+#save-controls button {
+    padding: 8px 10px;
+    background: #222;
+    border: 2px solid #777;
+    color: white;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#save-controls button:hover {
+    background: #444;
+    border-color: #aaa;
+}
+
+#save-controls button:last-child:hover {
+    background: #722;
+}
 
 #inventory-button {
     position: absolute;
-    top: 190px;
+    top: 235px;
     left: 20px;
     padding: 10px 18px;
     background: #222;
@@ -96,31 +114,19 @@ body {
     background: #444;
 }
 
-
-/* =========================================================
-   INVENTORY
-========================================================= */
-
 #inventory-window {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
     width: 520px;
     max-width: 90vw;
-
     background: rgba(15, 15, 20, 0.97);
-
     border: 3px solid #777;
     border-radius: 12px;
-
     padding: 15px;
-
     z-index: 20;
-
-    box-shadow:
-        0 0 30px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
 .hidden {
@@ -131,21 +137,17 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     font-size: 22px;
     font-weight: bold;
-
     margin-bottom: 15px;
 }
 
 .inventory-header button {
     width: 32px;
     height: 32px;
-
     border: none;
     background: #922;
     color: white;
-
     border-radius: 5px;
     cursor: pointer;
 }
@@ -153,15 +155,9 @@ body {
 .inventory-title {
     margin-top: 15px;
     margin-bottom: 8px;
-
     font-weight: bold;
     color: #ddd;
 }
-
-
-/* =========================================================
-   EQUIPMENT
-========================================================= */
 
 .equipment-panel {
     display: flex;
@@ -179,14 +175,10 @@ body {
     flex: 1;
     min-width: 140px;
     min-height: 55px;
-
     background: #292929;
-
     border: 2px solid #555;
     border-radius: 7px;
-
     padding: 8px;
-
     cursor: pointer;
 }
 
@@ -194,11 +186,6 @@ body {
     background: #3a3a3a;
     border-color: #aaa;
 }
-
-
-/* =========================================================
-   INVENTORY GRID
-========================================================= */
 
 .inventory-grid {
     display: grid;
@@ -208,20 +195,14 @@ body {
 
 .inventory-slot {
     aspect-ratio: 1;
-
     background: #222;
-
     border: 2px solid #555;
     border-radius: 7px;
-
     display: flex;
     flex-direction: column;
-
     justify-content: center;
     align-items: center;
-
     cursor: pointer;
-
     position: relative;
 }
 
@@ -238,83 +219,43 @@ body {
     position: absolute;
     bottom: 4px;
     right: 6px;
-
     font-size: 13px;
     font-weight: bold;
 }
 
-.item-common {
-    border-color: #777;
-}
-
-.item-uncommon {
-    border-color: #43a047;
-}
-
-.item-rare {
-    border-color: #2196f3;
-}
-
-.item-legendary {
-    border-color: #ff9800;
-}
-
-
-/* =========================================================
-   ITEM DESCRIPTION
-========================================================= */
+.item-common { border-color: #777; }
+.item-uncommon { border-color: #43a047; }
+.item-rare { border-color: #2196f3; }
+.item-legendary { border-color: #ff9800; }
 
 .item-description {
     min-height: 65px;
-
     margin-top: 12px;
-
     background: #191919;
-
     border: 1px solid #444;
-
     border-radius: 7px;
-
     padding: 10px;
-
     color: #ddd;
 }
 
-
-/* =========================================================
-   QUEST
-========================================================= */
-
 #quest-panel {
     position: absolute;
-
     top: 20px;
     right: 20px;
-
     width: 280px;
-
     background: rgba(0, 0, 0, 0.88);
-
     border: 2px solid #b8860b;
-
     border-radius: 10px;
-
     padding: 12px;
-
     z-index: 10;
 }
 
 .quest-header {
     font-size: 20px;
-
     font-weight: bold;
-
     color: #ffd54f;
-
     border-bottom: 1px solid #555;
-
     padding-bottom: 8px;
-
     margin-bottom: 10px;
 }
 
@@ -323,151 +264,78 @@ body {
     line-height: 1.5;
 }
 
-#quest-content h3 {
-    color: #ffd54f;
-    margin-bottom: 8px;
-}
-
-#quest-content p {
-    margin-bottom: 7px;
-}
+#quest-content h3 { color: #ffd54f; margin-bottom: 8px; }
+#quest-content p { margin-bottom: 7px; }
 
 #quest-content button {
     width: 100%;
-
     padding: 9px;
-
     margin-top: 8px;
-
     border: none;
-
     border-radius: 6px;
-
     background: #8b6508;
-
     color: white;
-
     font-weight: bold;
-
     cursor: pointer;
 }
 
-#quest-content button:hover {
-    background: #b8860b;
-}
-
-
-/* =========================================================
-   SHOP
-========================================================= */
+#quest-content button:hover { background: #b8860b; }
 
 #shop {
     position: absolute;
-
     bottom: 55px;
     right: 20px;
-
     width: 260px;
-
     background: rgba(0, 0, 0, 0.87);
-
     border: 2px solid #777;
-
     border-radius: 10px;
-
     padding: 12px;
 }
 
 .shop-title {
     font-size: 20px;
-
     font-weight: bold;
-
     margin-bottom: 10px;
 }
 
 #shop button {
     width: 100%;
-
     margin-top: 6px;
-
     padding: 9px;
-
     border: none;
-
     border-radius: 6px;
-
     background: #333;
-
     color: white;
-
     cursor: pointer;
 }
 
-#shop button:hover {
-    background: #555;
-}
-
-#shop button span {
-    display: block;
-
-    color: #ffd54f;
-
-    margin-top: 3px;
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
+#shop button:hover { background: #555; }
+#shop button span { display: block; color: #ffd54f; margin-top: 3px; }
 
 #message {
     position: absolute;
-
     top: 100px;
     left: 50%;
-
     transform: translateX(-50%);
-
     background: rgba(0, 0, 0, 0.85);
-
     padding: 10px 20px;
-
     border-radius: 8px;
-
     opacity: 0;
-
     transition: opacity 0.2s;
-
     pointer-events: none;
-
     z-index: 30;
 }
 
-#message.show {
-    opacity: 1;
-}
-
-
-/* =========================================================
-   CONTROLS
-========================================================= */
+#message.show { opacity: 1; }
 
 #controls {
     position: absolute;
-
     bottom: 10px;
     left: 50%;
-
     transform: translateX(-50%);
-
     background: rgba(0, 0, 0, 0.75);
-
     padding: 8px 15px;
-
     border-radius: 8px;
-
     font-size: 13px;
-
     white-space: nowrap;
 }
