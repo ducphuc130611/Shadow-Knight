@@ -62,6 +62,14 @@
     </div>
 
 
+    <!-- SAVE SYSTEM -->
+    <div id="save-controls">
+        <button onclick="saveGame()">💾 Save</button>
+        <button onclick="loadGame()">📂 Load</button>
+        <button onclick="resetSaveGame()">🗑️ Reset Save</button>
+    </div>
+
+
     <!-- INVENTORY BUTTON -->
     <button
         id="inventory-button"
@@ -195,6 +203,12 @@
         <b>E</b> NPC / Nhặt đồ
         &nbsp; | &nbsp;
         <b>I</b> Inventory
+        &nbsp; | &nbsp;
+        <b>F6</b> Save
+        &nbsp; | &nbsp;
+        <b>F7</b> Load
+        &nbsp; | &nbsp;
+        <b>F8</b> Reset Save
 
     </div>
 
@@ -206,6 +220,7 @@
 <script src="drops.js"></script>
 <script src="quests.js"></script>
 <script src="game.js"></script>
+<script src="save.js"></script>
 
 </body>
 </html>
